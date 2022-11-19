@@ -70,43 +70,43 @@ Please support and value the dedication and efforts of the original author.
 		
 		<!-- 欄位按鈕 -->
 		<ul class="navbar">
-			<li><a href="#shop">商品列表</a></li>
-			<li><a href="#about">關於我們</a></li>
+            <li><a href="#shop">商品列表</a></li>
+            <li><a href="#about">關於我們</a></li>
 		</ul>
 
 		<!-- 功能按鈕 -->
 		<div class="icons">
-			<a href="#"><i class='bx bx-search'></i></a>
-			<a href="#"><i class='bx bxs-user-circle' ></i></a>
-			<a href="#"><i class='bx bxs-shopping-bag' ></i></a>
+            <a href="#"><i class='bx bx-search'></i></a>
+            <a href="#"><i class='bx bxs-user-circle' ></i></a>
+            <a href="#"><i class='bx bxs-shopping-bag' ></i></a>
 		</div>
 	</header>
 
 	<!-- 商品列表清單 -->
 	<section class="shop" id="shop">
-		<div class="container">
-		<?php while ($rowProduct = mysqli_fetch_assoc($indexProductResult)) {  // 商品顯示處理代碼 (HEAD) ?>
-			<!-- 商品資訊框 -->
+        <div class="container">
+        <?php while ($rowProduct = mysqli_fetch_assoc($indexProductResult)) {  // 商品顯示處理代碼 (HEAD) ?>
+            <!-- 商品資訊框 -->
             <div class="box">
-				<img src=<?php echo $rowProduct["pIMAGE"]; ?>>
-				<h4> <?php echo $rowProduct["pTITLE"]; ?> </h4>
-				<h5>TWD <?php echo $rowProduct["pPRICE"]; ?>$</h5>
+                <img src=<?php echo $rowProduct["pIMAGE"]; ?>>
+                <h4> <?php echo $rowProduct["pTITLE"]; ?> </h4>
+                <h5>TWD <?php echo $rowProduct["pPRICE"]; ?>$</h5>
                 <div class="cart">
-					<a href=<?php echo "Product.php?product=".$rowProduct["pUUID"]; ?>><i class='bx bx-cart' ></i></a>
-				</div>
+                    <a href=<?php echo "Product.php?product=".$rowProduct["pUUID"]; ?>><i class='bx bx-cart' ></i></a>
+                </div>
             </div>
-		<?php } // 商品顯示處理代碼 (END) ?>
-		</div>
+        <?php } // 商品顯示處理代碼 (END) ?>
+        </div>
 	</section>
 
 	<!-- 關於我們 -->
 	<section class="about" id="about">
-		<div class="about-content">
-			<h2>關於我們</h2>
-			<p>我們不是一個有效的買賣商家，該網頁只是一個大學作品。用於在未來很好的觀摩以及反覆練習。模板來源：
-				<a href="https://www.youtube.com/watch?v=tHJI0Lbd77E&ab_channel=TahmidAhmed">點我前往</a>
-			</p>
-		</div>
+        <div class="about-content">
+            <h2>關於我們</h2>
+            <p>我們不是一個有效的買賣商家，該網頁只是一個大學作品。用於在未來很好的觀摩以及反覆練習。模板來源：
+                <a href="https://www.youtube.com/watch?v=tHJI0Lbd77E&ab_channel=TahmidAhmed">點我前往</a>
+            </p>
+        </div>
 	</section>
 
 	<!-- 網頁尾部快捷按鈕 -->
@@ -117,8 +117,7 @@ Please support and value the dedication and efforts of the original author.
                 <li><a href="#shop">商品列表</a></li>
                 <li><a href="#about">關於我們</a></li>
             </div>
-
-			<!-- 第二列 -->
+            <!-- 第二列 -->
             <div class="contact-content">
                 <li><a href="https://www.facebook.com/" target="_blank">Facebook</a></li>
                 <li><a href="https://www.instagram.com/" target="_blank">Instagram</a></li>
