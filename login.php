@@ -24,54 +24,48 @@
 
         /**
         * 嘗試登入該帳戶
-        * @param $_Email    帳戶信箱
+        * @param $_ID       帳戶名稱
         * @param $_Password 帳戶密碼
         * @return 登入結果
         */
-        public function tryLogin(string $_Email, string $_Password) : string {
-            // 將電子郵件轉為小寫處理
-            $_Email = strtolower($_Email);
-
-            // 檢查數據是否為空
-            if (empty($_Email) || empty($_Password)) return "電子郵件或密碼欄位不能為空。";
-
+        public function tryLogin(string $_ID, string $_Password) : string {
             /* 
-            / ** 表結構 **
-            / CREATE TABLE Accounts(
-            /    uEMAIL  varchar(64) NOT NULL PRIMARY KEY,
-            /    uPASSWD varchar(32) NOT NULL ,
-            /    uUUID   varchar(36) NOT NULL ,
-            /    uTime   varchar(20) NOT NULL
-            / );
-            /
-            / 顯示結構：DESCRIBE Accounts;
+            CREATE TABLE Accounts (
+                uID varchar(20) PRIMARY KEY NOT NULL, 
+                uEMAIL varchar(64) NOT NULL, 
+                uPASSWD varchar(32) NOT NULL, 
+                uTIME varchar(20) NOT NULL
+            );
+
+            -> DESCRIBE Accounts;
             +---------+-------------+------+-----+---------+-------+
             | Field   | Type        | Null | Key | Default | Extra |
             +---------+-------------+------+-----+---------+-------+
-            | uEMAIL  | varchar(64) | NO   | PRI | NULL    |       |
+            | uID     | varchar(20) | NO   | PRI | NULL    |       |
+            | uEMAIL  | varchar(64) | NO   |     | NULL    |       |
             | uPASSWD | varchar(32) | NO   |     | NULL    |       |
-            | uUUID   | varchar(36) | NO   |     | NULL    |       |
-            | uTime   | varchar(20) | NO   |     | NULL    |       |
+            | uTIME   | varchar(20) | NO   |     | NULL    |       |
             +---------+-------------+------+-----+---------+-------+
             */
 
-            // 根據電子郵件取出 密碼 UUID
-            $findInfoForEmailCommand = "SELECT uPASSWD, uUUID FROM Accounts WHERE uEMAIL='$_Email';";
-            $findInfoForEmialResult  = mysqli_query($this->m_ConnectObject, $findInfoForEmailCommand);
+            // 檢查數據是否為空
+            if (empty($_ID) || empty($_Password)) return "帳戶名稱、密碼欄位不能為空。";
+
+            // 根據帳戶名稱取出密碼
+            $selectPasswordForNameCommand = "SELECT uPASSWD FROM Accounts WHERE uID='$_ID';";
+            $selectPasswordForNameResult  = mysqli_query($this->m_ConnectObject, $selectPasswordForNameCommand);
 
             // 是否有找到任何資料
-            if ($findInfoForEmialResult->num_rows == 0) return "該電子郵件尚未被註冊。";
+            if ($selectPasswordForNameResult->num_rows == 0) return "該帳戶名稱尚未被註冊。";
 
-            $findInfoRow = mysqli_fetch_assoc($findInfoForEmialResult);
+            // 處理資料
+            $selectPasswordRow = mysqli_fetch_assoc($selectPasswordForNameResult);
             // 比較輸入密碼與資料庫密碼是否一致
-            if (strcmp($_Password, $findInfoRow["uPASSWD"]) == 0) {
+            if (strcmp($_Password, $selectPasswordRow["uPASSWD"]) == 0) {
                 // 比對成功
                 $this->m_LoginResult = true;
-                return $findInfoRow["uUUID"];
-            }
-
-            // 比對失敗
-            return "電子郵件或密碼輸入錯誤。";
+                return "";
+            } return "帳戶名稱或密碼輸入錯誤。"; // 比對失敗
         }
 
         /**
@@ -87,18 +81,18 @@
     session_start();
 
     // 判斷是否已經對表單提交
-    if (isset($_POST["UserEnmail"]) && isset($_POST["UserPassword"])) {
+    if (isset($_POST["UserName"]) && isset($_POST["UserPassword"])) {
         // 新增 LoginConnection 對象
         $connectObject = new LoginConnection();
-        $result        = $connectObject->tryLogin($_POST["UserEnmail"], $_POST["UserPassword"]);
+        $result        = $connectObject->tryLogin($_POST["UserName"], $_POST["UserPassword"]);
 
-        // 獲取註冊結果
+        // 獲取登入結果
         if ($connectObject->getLoginResult()) {
-            // 寫入當前用戶 UUID
-            $_SESSION["SESSION_USER"] = $result;
-            // 跳轉回主網頁
-            header("Location: index.php");
-        } else header("Location: Login.php?error=$result"); // 顯示失敗訊息
+            $_SESSION["SESSION_USER"] = $_POST["UserName"];
+            header("Location: Index.php");
+        }
+        else 
+            header("Location: Login.php?error=$result");    // 顯示失敗訊息
     }
     ?>
 </head>
@@ -109,8 +103,7 @@
         <h1>登入帳戶</h1>
 
         <?php
-        // 返回訊息說明
-        if (isset($_GET["error"])) {
+        if (isset($_GET["error"])) {                                        // 返回訊息說明
             $message = $_GET["error"];
             echo("<div class='messagebox-error'><h3>$message</h3></div>");
         }
@@ -120,9 +113,9 @@
         <form method="POST" action="Login.php">
             <!-- 信箱輸入框 -->
             <div class="field">
-                <input type="email" name="UserEnmail" title="帳戶信箱" required>
+                <input type="test" name="UserName" title="帳戶名稱" required>
                 <span></span>
-                <label>帳戶信箱：</label>
+                <label>帳戶名稱：</label>
             </div>
 
             <!-- 密碼輸入框 -->
