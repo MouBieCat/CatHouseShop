@@ -19,15 +19,15 @@ Please support and value the dedication and efforts of the original author.
     <meta http-equiv="X-YA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>首頁 - 貓之家購物網</title>
-	<!-- 連結 -->
-	<link rel="stylesheet" type="text/css" href="./CommonStyle.css">
+    <!-- 連結 -->
+    <link rel="stylesheet" type="text/css" href="./CommonStyle.css">
     <link rel="stylesheet" type="text/css" href="./IndexStyle.css">
-	<link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-	<!-- PHP 代碼 -->
-	<?php?>
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- PHP 代碼 -->
+    <?php?>
 </head>
 
 <body>
@@ -179,19 +179,19 @@ Please support and value the dedication and efforts of the original author.
 
 	<!-- 網頁尾部快捷按鈕 -->
 	<section class="contact" id="contact">
-		<div class="main-contact">
-			<!-- 第一列 -->
-			<div class="contact-content">
-				<li><a href="#shop">商品列表</a></li>
-			  <li><a href="#about">關於我們</a></li>
-			</div>
+        <div class="main-contact">
+            <!-- 第一列 -->
+            <div class="contact-content">
+                <li><a href="#shop">商品列表</a></li>
+                <li><a href="#about">關於我們</a></li>
+            </div>
 
 			<!-- 第二列 -->
-			<div class="contact-content">
-				<li><a href="https://www.facebook.com/" target="_blank">Facebook</a></li>
-				<li><a href="https://www.instagram.com/" target="_blank">Instagram</a></li>
-			</div>
-		</div>
+            <div class="contact-content">
+                <li><a href="https://www.facebook.com/" target="_blank">Facebook</a></li>
+                <li><a href="https://www.instagram.com/" target="_blank">Instagram</a></li>
+            </div>
+        </div>
 	</section>
 
 	<!-- 網頁尾部公司聲明 -->
