@@ -9,14 +9,6 @@
 	scroll-behavior: smooth;
 }
 
-/* =========================================================
-* body
-*  ========================================================= */
-body {
-	/* 覆蓋通用樣式表的滾動條隱藏 */
-	overflow: scroll;
-}
-
 :root {
 	--bg-color: #ffffff;
 	--text-color: #121212;
@@ -200,6 +192,9 @@ section {
 	background: var(--text-color);
 }
 
+/* =========================================================
+* main-contact
+*  ========================================================= */
 .main-contact {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(250px, auto));
@@ -222,6 +217,7 @@ section {
 .contact-content li a:hover {
 	transform: translateX(-10px);
 }
+
 
 /* =========================================================
 * copyright

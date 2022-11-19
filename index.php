@@ -20,12 +20,43 @@ Please support and value the dedication and efforts of the original author.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>首頁 - 貓之家購物網</title>
     <!-- 連結 -->
-    <link rel="stylesheet" type="text/css" href="./CommonStyle.css">
+	<link rel="stylesheet" type="text/css" href="./CommonStyle.css">
     <link rel="stylesheet" type="text/css" href="./IndexStyle.css">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+	<?php
+	include "DataBaseConnection.php";
+	final class IndexProductConnection extends MySQLConnect {
+		/**
+		* 建構子
+		*/
+		public function __construct() {
+			parent::__construct();
+		}
+	
+		/**
+		 * 取出網頁所需的資料庫資料
+		 * @param $_Page 頁數  (我們會對頁數進行 -1)
+		 * @param $_Size 資料量
+		 * @return 資料庫查詢結果
+		 */
+		public function getProducts(int $_Page = 1, int $_Size = 12) {
+			$startIndex = ($_Page - 1) * $_Size;                                                              // 計算資料開始索引
+			$selectProductsCommand = "SELECT pUUID, pTITLE, pPRICE, pIMAGE FROM Product LIMIT $startIndex, $_Size";  // 指令
+			return mysqli_query($this->m_ConnectObject, $selectProductsCommand);                              // 查詢
+		}
+	}
+	
+	// 獲取頁數
+	$page = 1;
+	if (isset($_GET["page"])) $page = $_GET["page"];
+
+	// 查詢相關物件
+	$indexProduct       = new IndexProductConnection($page);
+	$indexProductResult = $indexProduct->getProducts();
+	?>
 </head>
 
 <body>
@@ -36,7 +67,7 @@ Please support and value the dedication and efforts of the original author.
 
 		<!-- 當網頁縮小顯示更小的條目欄 -->
 		<div class="bx bx-menu" id="menu-icon"></div>
-
+		
 		<!-- 欄位按鈕 -->
 		<ul class="navbar">
 			<li><a href="#shop">商品列表</a></li>
@@ -54,114 +85,17 @@ Please support and value the dedication and efforts of the original author.
 	<!-- 商品列表清單 -->
 	<section class="shop" id="shop">
 		<div class="container">
-			<div class="box">
-				<img src="img/main1.jpg">
-				<h4>I'm a product</h4>
-				<h5>$15.00</h5>
-				<div class="cart">
-					<a href="#"><i class='bx bx-cart' ></i></a>
+		<?php while ($rowProduct = mysqli_fetch_assoc($indexProductResult)) {  // 商品顯示處理代碼 (HEAD) ?>
+			<!-- 商品資訊框 -->
+            <div class="box">
+				<img src=<?php echo $rowProduct["pIMAGE"]; ?>>
+				<h4> <?php echo $rowProduct["pTITLE"]; ?> </h4>
+				<h5>TWD <?php echo $rowProduct["pPRICE"]; ?>$</h5>
+                <div class="cart">
+					<a href=<?php echo "Product.php?product=".$rowProduct["pUUID"]; ?>><i class='bx bx-cart' ></i></a>
 				</div>
-			</div>
-
-			<div class="box">
-				<img src="img/main2.jpg">
-				<h4>I'm a product</h4>
-				<h5>$15.00</h5>
-				<div class="cart">
-					<a href="#"><i class='bx bx-cart' ></i></a>
-				</div>
-			</div>
-
-			<div class="box">
-				<img src="img/main3.jpg">
-				<h4>I'm a product</h4>
-				<h5>$15.00</h5>
-				<div class="cart">
-					<a href="#"><i class='bx bx-cart' ></i></a>
-				</div>
-			</div>
-
-			<div class="box">
-				<img src="img/main4.jpg">
-				<h4>I'm a product</h4>
-				<h5>$15.00</h5>
-				<div class="cart">
-					<a href="#"><i class='bx bx-cart' ></i></a>
-				</div>
-			</div>
-
-			<div class="box">
-				<img src="img/main5.jpg">
-				<h4>I'm a product</h4>
-				<h5>$15.00</h5>
-				<div class="cart">
-					<a href="#"><i class='bx bx-cart' ></i></a>
-				</div>
-			</div>
-
-			<div class="box">
-				<img src="img/main6.jpg">
-				<h4>I'm a product</h4>
-				<h5>$15.00</h5>
-				<div class="cart">
-					<a href="#"><i class='bx bx-cart' ></i></a>
-				</div>
-			</div>
-
-			<div class="box">
-				<img src="img/main7.jpg">
-				<h4>I'm a product</h4>
-				<h5>$15.00</h5>
-				<div class="cart">
-					<a href="#"><i class='bx bx-cart' ></i></a>
-				</div>
-			</div>
-
-			<div class="box">
-				<img src="img/main8.jpg">
-				<h4>I'm a product</h4>
-				<h5>$15.00</h5>
-				<div class="cart">
-					<a href="#"><i class='bx bx-cart' ></i></a>
-				</div>
-			</div>
-
-			<div class="box">
-				<img src="img/main9.jpg">
-				<h4>I'm a product</h4>
-				<h5>$15.00</h5>
-				<div class="cart">
-					<a href="#"><i class='bx bx-cart' ></i></a>
-				</div>
-			</div>
-
-			<div class="box">
-				<img src="img/main10.jpg">
-				<h4>I'm a product</h4>
-				<h5>$15.00</h5>
-				<div class="cart">
-					<a href="#"><i class='bx bx-cart' ></i></a>
-				</div>
-			</div>
-
-			<div class="box">
-				<img src="img/main11.jpg">
-				<h4>I'm a product</h4>
-				<h5>$15.00</h5>
-				<div class="cart">
-					<a href="#"><i class='bx bx-cart' ></i></a>
-				</div>
-			</div>
-
-			<div class="box">
-				<img src="img/main12.jpg">
-				<h4>I'm a product</h4>
-				<h5>$15.00</h5>
-				<div class="cart">
-					<a href="#"><i class='bx bx-cart' ></i></a>
-				</div>
-			</div>
-
+            </div>
+		<?php } // 商品顯示處理代碼 (END) ?>
 		</div>
 	</section>
 
