@@ -179,12 +179,22 @@ input[type="submit"]:hover {
 /* =========================================================
 * messagebox
 *  ========================================================= */
-.messagebox {
+.messagebox-error {
+    background: #F2DEDE;
+    color: #A94442;
+    padding: 10px;
+    width: 75%;
+    border-radius: 5px;
+    margin: 20px auto;
     text-align: center;
-    width: 85%;
-    margin: 10px auto;
-    padding: 20px;
-    position: relative;
-    border-radius: 25px;
-    background-color: rgb(177, 51, 89);
+}
+
+.messagebox-success {
+    background: rgb(203, 240, 218);
+    color: #2d8b35;
+    padding: 10px;
+    width: 75%;
+    border-radius: 5px;
+    margin: 20px auto;
+    text-align: center;
 }

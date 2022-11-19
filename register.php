@@ -17,10 +17,6 @@
 
         /**
         * 建構子
-        * @param $_DatabaseName 資料庫名稱
-        * @param $_Address      資料庫位址
-        * @param $_User         登入使用者名稱
-        * @param $_Password     登入使用者密碼
         */
         public function __construct() {
             parent::__construct();
@@ -63,21 +59,14 @@
             +---------+-------------+------+-----+---------+-------+
             */
 
-            // 檢查電子郵件是否已經存在
-            $checkEmailCommand = "SELECT uEMAIL FROM Accounts WHERE uEMAIL='$_Email';";
-            $checkEmailResult  = mysqli_query($this->m_ConnectObject, $checkEmailCommand);
-            if ($checkEmailResult->num_rows == 1) return "電子郵件已經被註冊了。";
-
             // 插入註冊資料
             $addAccountCommand = "INSERT INTO Accounts (uEMAIL, uPASSWD, uUUID, uTime) VALUES ('$_Email', '$_Password', uuid(), now());";
             $addAccountResult  = mysqli_query($this->m_ConnectObject, $addAccountCommand);
+            // 檢查是否插入資料成功
+            if (mysqli_errno($this->m_ConnectObject) != 0) return "電子郵件已經被註冊了。";
+            
             $this->m_RegisterResult = TRUE;
-
-            // 返回用戶 UUID
-            $findUUIDCommand = "SELECT uUUID from Accounts WHERE uEMAIL='$_Email' AND uPASSWD='$_Password';";
-            $findUUIDResult  = mysqli_query($this->m_ConnectObject, $findUUIDCommand);
-            $findUUIDRow     = mysqli_fetch_assoc($findUUIDResult);
-            return $findUUIDRow["uUUID"];
+            return "恭喜您註冊完成，立即<a href='login.php'>登入！</a>";
         }
 
         /**
@@ -93,18 +82,16 @@
     session_start();
 
     // 判斷是否已經對表單提交
-    if (!empty($_POST)) {
+    if (isset($_POST["UserEnmail"]) && isset($_POST["UserPassword"])) {
         // 新增 RegisterConnection 對象
         $connectObject = new RegisterConnection();
         $result        = $connectObject->tryRegister($_POST["UserEnmail"], $_POST["UserPassword"]);
 
         // 獲取註冊結果
         if ($connectObject->getRegisterResult()) {
-            // 寫入當前用戶 UUID
-            $_SESSION["SESSION_USER"] = $result;
             // 跳轉回主網頁
-            header("Location: index.php");
-        } else header("Location: register.php?error=$result"); // 顯示失敗訊息
+            header("Location: Register.php?success=$result");
+        } else header("Location: Register.php?error=$result"); // 顯示失敗訊息
     }
     ?>
 </head>
@@ -114,16 +101,22 @@
         <!-- 標題 -->
         <h1>註冊帳戶</h1>
 
-        <!-- 返回訊息說明 -->
         <?php
+        // 返回訊息說明
         if (isset($_GET["error"])) {
             $message = $_GET["error"];
-            echo("<div class='messagebox'><h3>$message</h3></div>");
+            echo("<div class='messagebox-error'><h3>$message</h3></div>");
+        }
+
+        // 返回成功訊息
+        if (isset($_GET["success"])) {
+            $message = $_GET["success"];
+            echo("<div class='messagebox-success'><h3>$message</h3></div>");
         }
         ?>
 
         <!-- 表單 -->
-        <form method="POST" action="register.php">
+        <form method="POST" action="Register.php">
             <!-- 信箱輸入框 -->
             <div class="field">
                 <input type="email" name="UserEnmail" title="帳戶信箱" required>

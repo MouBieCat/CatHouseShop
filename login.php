@@ -17,10 +17,6 @@
             
         /**
         * 建構子
-        * @param $_DatabaseName 資料庫名稱
-        * @param $_Address      資料庫位址
-        * @param $_User         登入使用者名稱
-        * @param $_Password     登入使用者密碼
         */
         public function __construct() {
             parent::__construct();
@@ -91,7 +87,7 @@
     session_start();
 
     // 判斷是否已經對表單提交
-    if (!empty($_POST)) {
+    if (isset($_POST["UserEnmail"]) && isset($_POST["UserPassword"])) {
         // 新增 LoginConnection 對象
         $connectObject = new LoginConnection();
         $result        = $connectObject->tryLogin($_POST["UserEnmail"], $_POST["UserPassword"]);
@@ -102,7 +98,7 @@
             $_SESSION["SESSION_USER"] = $result;
             // 跳轉回主網頁
             header("Location: index.php");
-        } else header("Location: login.php?error=$result"); // 顯示失敗訊息
+        } else header("Location: Login.php?error=$result"); // 顯示失敗訊息
     }
     ?>
 </head>
@@ -112,16 +108,16 @@
         <!-- 標題 -->
         <h1>登入帳戶</h1>
 
-        <!-- 返回訊息說明 -->
         <?php
+        // 返回訊息說明
         if (isset($_GET["error"])) {
             $message = $_GET["error"];
-            echo("<div class='messagebox'><h3>$message</h3></div>");
+            echo("<div class='messagebox-error'><h3>$message</h3></div>");
         }
         ?>
 
         <!-- 表單 -->
-        <form method="POST" action="login.php">
+        <form method="POST" action="Login.php">
             <!-- 信箱輸入框 -->
             <div class="field">
                 <input type="email" name="UserEnmail" title="帳戶信箱" required>
@@ -131,7 +127,7 @@
 
             <!-- 密碼輸入框 -->
             <div class="field">
-                <input type="password" name="UserPassword" title="帳戶密碼" required>
+                <input type="password" name="UserPassword" title="帳戶密碼" required></input>
                 <span></span>
                 <label>帳戶密碼：</label>
             </div>
@@ -141,7 +137,7 @@
         </form>
 
         <!-- 跳轉註冊頁面 -->
-        <div class="singup">還沒有一個帳戶嗎？<a href="register.php">馬上註冊！</a></div>
+        <div class="singup">您是我們的新朋友嗎？<a href="register.php">馬上註冊！</a></div>
     </div>
 </body>
 </html>
