@@ -1,4 +1,5 @@
 <!-- 登入網頁 -->
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
     <!-- 網頁元素 -->
