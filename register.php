@@ -1,5 +1,4 @@
 <!-- 註冊網頁 -->
-<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
     <!-- 網頁元素 -->
@@ -140,5 +139,10 @@
         <!-- 跳轉登入頁面 -->
         <div class="singup">已經擁有一個帳戶嗎？<a href="login.php">點擊登入！</a></div>
     </div>
+
+    <!-- 網頁尾部公司聲明 -->
+	<div class="copyright">
+		<p>© 2022 by CatHouse. Just a practice template</p>
+	</div>
 </body>
 </html>
