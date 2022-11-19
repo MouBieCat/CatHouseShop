@@ -13,6 +13,4 @@
 body {
     /* 背景色 */
     background: linear-gradient(120deg,#2980b9, #8122aa);
-    /* 超出範圍-隱藏 */
-    overflow: hidden;
 }

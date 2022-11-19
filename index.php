@@ -26,8 +26,6 @@ Please support and value the dedication and efforts of the original author.
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- PHP 代碼 -->
-    <?php?>
 </head>
 
 <body>
@@ -194,7 +192,7 @@ Please support and value the dedication and efforts of the original author.
         </div>
 	</section>
 
-	<!-- 網頁尾部公司聲明 -->
+	<!-- 網頁尾部網頁聲明 -->
 	<div class="copyright">
 		<p>© 2022 by CatHouse. Just a practice template</p>
 	</div>
