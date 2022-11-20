@@ -88,7 +88,7 @@ Please support and value the dedication and efforts of the original author.
         <?php while ($rowProduct = mysqli_fetch_assoc($indexProductResult)) {  // 商品顯示處理代碼 (HEAD) ?>
             <!-- 商品資訊框 -->
             <div class="box">
-                <img src=<?php echo $rowProduct["pIMAGE"]; ?>>
+                <img alt="ProductImage" src=<?php echo $rowProduct["pIMAGE"]; ?>>
                 <h4> <?php echo $rowProduct["pTITLE"]; ?> </h4>
                 <h5>TWD <?php echo $rowProduct["pPRICE"]; ?>$</h5>
                 <div class="cart">
