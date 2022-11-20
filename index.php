@@ -27,6 +27,11 @@ Please support and value the dedication and efforts of the original author.
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 	<?php
+
+	/* Index define. */
+	define("__PAGE_PRODUCT_SIZE__", 12); // 每頁顯示比數
+	define("__DEFAULT_PAGE__", 1);      // 預設開啟頁數
+
 	include "DataBaseConnection.php";
 	final class IndexProductConnection extends MySQLConnect {
 		/**
@@ -42,20 +47,34 @@ Please support and value the dedication and efforts of the original author.
 		 * @param $_Size 資料量
 		 * @return 資料庫查詢結果
 		 */
-		public function getProducts(int $_Page = 1, int $_Size = 12) {
-			$startIndex = ($_Page - 1) * $_Size;                                                              // 計算資料開始索引
-			$selectProductsCommand = "SELECT pUUID, pTITLE, pPRICE, pIMAGE FROM Product LIMIT $startIndex, $_Size";  // 指令
-			return mysqli_query($this->m_ConnectObject, $selectProductsCommand);                              // 查詢
+		public function getProducts(int $_Page = __DEFAULT_PAGE__, int $_Size = __PAGE_PRODUCT_SIZE__) {
+			$startIndex = ($_Page - 1) * $_Size;
+			$selectProductsCommand = "SELECT * FROM Product LIMIT $startIndex, $_Size"; 
+			return mysqli_query($this->m_ConnectObject, $selectProductsCommand);
+		}
+
+		/**
+		 * 取出所有資料
+		 * @return 資料庫查詢結果
+		 */
+		public function getAllProducts() {
+			$selectProductsCommand = "SELECT * FROM Product"; 
+			return mysqli_query($this->m_ConnectObject, $selectProductsCommand);
 		}
 	}
-	
-	// 獲取頁數
-	$page = 1;
-	if (isset($_GET["page"])) $page = $_GET["page"];
+
+	// 處理頁數
+	$nowPage = __DEFAULT_PAGE__;
+	if (isset($_GET["page"])) $nowPage = $_GET["page"];
 
 	// 查詢相關物件
-	$indexProduct       = new IndexProductConnection($page);
-	$indexProductResult = $indexProduct->getProducts();
+	$indexProduct = new IndexProductConnection();
+	// 取出所有資料
+	$allProductResult = $indexProduct->getAllProducts();
+	$totalPage        = ceil($allProductResult->num_rows / __PAGE_PRODUCT_SIZE__);
+
+    // 取出特定位置資料
+    $partialProductResult = $indexProduct->getProducts($nowPage);
 	?>
 </head>
 
@@ -71,7 +90,6 @@ Please support and value the dedication and efforts of the original author.
 		<!-- 欄位按鈕 -->
 		<ul class="navbar">
             <li><a href="#shop">商品列表</a></li>
-            <li><a href="#about">關於我們</a></li>
 		</ul>
 
 		<!-- 功能按鈕 -->
@@ -84,8 +102,8 @@ Please support and value the dedication and efforts of the original author.
 
 	<!-- 商品列表清單 -->
 	<section class="shop" id="shop">
-        <div class="container">
-        <?php while ($rowProduct = mysqli_fetch_assoc($indexProductResult)) {  // 商品顯示處理代碼 (HEAD) ?>
+        <div class="product-container">
+        <?php while ($rowProduct = mysqli_fetch_assoc($partialProductResult)) {  // 商品顯示處理代碼 (HEAD) ?>
             <!-- 商品資訊框 -->
             <div class="box">
                 <img alt="ProductImage" src=<?php echo $rowProduct["pIMAGE"]; ?>>
@@ -99,37 +117,25 @@ Please support and value the dedication and efforts of the original author.
         </div>
 	</section>
 
-	<!-- 關於我們 -->
-	<section class="about" id="about">
-        <div class="about-content">
-            <h2>關於我們</h2>
-            <p>我們不是一個有效的買賣商家，該網頁只是一個大學作品。用於在未來很好的觀摩以及反覆練習。模板來源：
-                <a href="https://www.youtube.com/watch?v=tHJI0Lbd77E&ab_channel=TahmidAhmed">點我前往</a>
-            </p>
-        </div>
-	</section>
-
-	<!-- 網頁尾部快捷按鈕 -->
-	<section class="contact" id="contact">
-        <div class="main-contact">
-            <!-- 第一列 -->
-            <div class="contact-content">
-                <li><a href="#shop">商品列表</a></li>
-                <li><a href="#about">關於我們</a></li>
-            </div>
-            <!-- 第二列 -->
-            <div class="contact-content">
-                <li><a href="https://www.facebook.com/" target="_blank">Facebook</a></li>
-                <li><a href="https://www.instagram.com/" target="_blank">Instagram</a></li>
-            </div>
-        </div>
-	</section>
-
-	<!-- 網頁尾部網頁聲明 -->
-	<div class="copyright">
-		<p>© 2022 by CatHouse. Just a practice template</p>
+	<!-- 翻頁按鈕 -->
+	<div class="page-container">
+		<!-- < -->
+        <a href=<?php if ($nowPage > 1) echo "index.php?page=".($nowPage - 1); /* 往前翻頁處理 */ ?>><button class="right-button"><svg enable-background="new 0 0 11 11" viewBox="0 0 11 11" x="0" y="0" class="shopee-svg-icon icon-arrow-left"><g><path d="m8.5 11c-.1 0-.2 0-.3-.1l-6-5c-.1-.1-.2-.3-.2-.4s.1-.3.2-.4l6-5c .2-.2.5-.1.7.1s.1.5-.1.7l-5.5 4.6 5.5 4.6c.2.2.2.5.1.7-.1.1-.3.2-.4.2z"></svg></button></a>
+        <?php
+        /* 如果不會顯示第一頁，則用分隔點並且顯示第一頁 */
+        if ($nowPage - 2 > 1) echo "<a href='index.php?page=1'><button class='noselect-button'>1</button></a><button class='none-button'>...</button>";
+        /* 頁數按鈕處理代碼 */
+        for ($pageTemp = $nowPage - 2; $pageTemp < $nowPage + 3; $pageTemp++) {
+            if ($pageTemp < 1 || $pageTemp > $totalPage) continue;
+            if ($pageTemp == $nowPage) echo "<button class='select-button'>$pageTemp</button>";
+            else echo "<a href='index.php?page=$pageTemp'><button class='noselect-button'>$pageTemp</button></a>";
+        }
+        /* 如果不會顯示最後頁，則用分隔點並且顯示最後頁 */
+        if ($nowPage + 3 < $totalPage) echo "<button class='none-button'>...</button><a href='index.php?page=$totalPage'><button class='noselect-button'>$totalPage</button></a>";?>
+        <!-- >  -->
+	    <a href=<?php if ($nowPage < $totalPage) echo "index.php?page=".($nowPage + 1) /* 往後翻頁處理 */ ?>><button class="left-button"><svg enable-background="new 0 0 11 11" viewBox="0 0 11 11" x="0" y="0" class="shopee-svg-icon icon-arrow-right"><path d="m2.5 11c .1 0 .2 0 .3-.1l6-5c .1-.1.2-.3.2-.4s-.1-.3-.2-.4l-6-5c-.2-.2-.5-.1-.7.1s-.1.5.1.7l5.5 4.6-5.5 4.6c-.2.2-.2.5-.1.7.1.1.3.2.4.2z"></svg></button></a>
 	</div>
-
+	
 	<!-- 連接 -->
 	<script src="IndexScript.js"></script>
 </body>
