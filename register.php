@@ -6,143 +6,122 @@
     <meta http-equiv="X-YA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>註冊 - 貓之家購物網</title>
+
     <!-- 連結 -->
-    <link rel="stylesheet" type="text/css" href="./CommonStyle.css">
-    <link rel="stylesheet" type="text/css" href="./RegisterStyle.css">
-    <!-- PHP 代碼 -->
+    <link rel="stylesheet" type="text/css" href="./commonstyle.css">
+    <link rel="stylesheet" type="text/css" href="./Register.css">
+
+    <!-- 代碼 -->
     <?php
     include "DataBaseConnection.php";
-    final class RegisterConnection extends MySQLConnect {
-    private $m_RegisterResult = false;
-
+    final class RegisterDataBaseConnect extends DataBaseConnect {
         /**
+         * 資料庫 Accounts 表資訊
+         * 
+         * CREATE TABLE Accounts(
+         *   uName varchar(20) PRIMARY KEY NOT NULL, 
+         *   uEmail varchar(64) NOT NULL, 
+         *   uPasswd varchar(32) NOT NULL, 
+         *   uRegisterTime varchar(20) NOT NULL
+         * );
+         * 
+         * DESCRIBE Accounts;
+         * +---------------+-------------+------+-----+---------+-------+
+         * | Field         | Type        | Null | Key | Default | Extra |
+         * +---------------+-------------+------+-----+---------+-------+
+         * | uName         | varchar(20) | NO   | PRI | NULL    |       |
+         * | uEmail        | varchar(64) | NO   |     | NULL    |       |
+         * | uPasswd       | varchar(32) | NO   |     | NULL    |       |
+         * | uRegisterTime | varchar(20) | NO   |     | NULL    |       |
+         * +---------------+-------------+------+-----+---------+-------+
+         */
+
+         /**
         * 建構子
         */
         public function __construct() {
             parent::__construct();
         }
 
-        /**
-        * 嘗試註冊該帳戶
-        * @param $_ID       帳戶名稱
-        * @param $_Email    帳戶信箱
-        * @param $_Password 帳戶密碼
-        * @return 登入結果
-        */
-        public function tryRegister(string $_ID, string $_Email, string $_Password) : string {
-            /* 
-            CREATE TABLE Accounts (
-                uID varchar(20) PRIMARY KEY NOT NULL, 
-                uEMAIL varchar(64) NOT NULL, 
-                uPASSWD varchar(32) NOT NULL, 
-                uTIME varchar(20) NOT NULL
-            );
-
-            -> DESCRIBE Accounts;
-            +---------+-------------+------+-----+---------+-------+
-            | Field   | Type        | Null | Key | Default | Extra |
-            +---------+-------------+------+-----+---------+-------+
-            | uID     | varchar(20) | NO   | PRI | NULL    |       |
-            | uEMAIL  | varchar(64) | NO   |     | NULL    |       |
-            | uPASSWD | varchar(32) | NO   |     | NULL    |       |
-            | uTIME   | varchar(20) | NO   |     | NULL    |       |
-            +---------+-------------+------+-----+---------+-------+
-            */
-
-            // 將電子郵件轉為小寫處理
-            $_Email = strtolower($_Email);
-
-            // 檢查數據是否為空
-            if (empty($_ID) || empty($_Email) || empty($_Password)) return "帳戶名稱、電子郵件、密碼欄位不能為空。";
+         /**
+         * 嘗試登入
+         * @param $_Name   帳戶名稱
+         * @param $_Email  帳戶信箱
+         * @param $_Passwd 帳戶密碼
+         * @return 提交結果訊息
+         */
+        public function tryRegister(string $_Name, string $_Email, string $_Passwd) {
+            // 檢查是否為空值
+            if (empty($_Name) || empty($_Email) || empty($_Passwd)) return "帳戶名稱、帳戶信箱或是密碼欄位不可為空。";
 
             // 檢查數據使否符合資料庫規格
-            if (strlen($_ID) > 20 || strlen($_Password) < 4) return "帳戶名稱長度過短或超出最大長度。";
+            if (strlen($_Name) > 20 || strlen($_Name) < 4) return "帳戶名稱長度過短或超出最大長度。";
             if (strlen($_Email) > 64) return "電子郵件長度超出最大長度。";
-            if (strlen($_Password) > 32 || strlen($_Password) < 12) return "密碼長度過短或超出最大長度。";
+            if (strlen($_Passwd) > 32 || strlen($_Passwd) < 12) return "密碼長度過短或超出最大長度。";
 
-            // 插入註冊資料
-            $insertAccountCommand = "INSERT INTO Accounts (uID, uEMAIL, uPASSWD, uTIME) VALUES ('$_ID', '$_Email', '$_Password', now());";
-            $insertAccountResult  = mysqli_query($this->m_ConnectObject, $insertAccountCommand);
-            // 檢查是否插入資料成功
-            if (mysqli_errno($this->m_ConnectObject) != 0) return "該帳戶名稱已經被使用。";
-            
-            $this->m_RegisterResult = TRUE;
-            return "";
-        }
+            // 開始寫入到數據庫中
+            $insertCommand = "INSERT INTO Accounts (uName, uEmail, uPasswd, uRegisterTime) VALUES ('$_Name', '$_Email', '$_Passwd', now());";
+            $insertResult  = $this->m_ConnectObject->query($insertCommand);
 
-        /**
-        * 獲取是否成功登入
-        * @return 是否成功註冊
-        */
-        public function getRegisterResult() : bool {
-            return $this->m_RegisterResult;
+            // 資料是否插入成功
+            if ($insertResult) return "True";
+            return "該帳戶名稱已經被使用。";
         }
     }
-    
+
     // 開啟 SESSION 功能
     session_start();
 
-    // 判斷是否已經對表單提交
-    if (isset($_POST["UserName"]) && isset($_POST["UserEnmail"]) && isset($_POST["UserPassword"])) {
-        // 新增 RegisterConnection 對象
-        $connectObject = new RegisterConnection();
-        $result        = $connectObject->tryRegister($_POST["UserName"], $_POST["UserEnmail"], $_POST["UserPassword"]);
+    // 判斷是否有提交
+    if (isset($_POST["UserNameTextBox"]) && isset($_POST["UserEmailTextBox"]) && isset($_POST["UserPasswordTextBox"])) {
+        // 建立資料庫驗證對象
+        $connection = new RegisterDataBaseConnect();
+        $result     = $connection->tryRegister($_POST["UserNameTextBox"], $_POST["UserEmailTextBox"], $_POST["UserPasswordTextBox"]);
 
-        // 獲取註冊結果
-        if ($connectObject->getRegisterResult()) 
-            header("Location: Login.php");
-        else 
-            header("Location: Register.php?error=$result");    // 顯示失敗訊息
+        // 如果註冊成功
+        if ($result === "True") {
+            header("Location: login.php");
+        } else header("Location: Register.php?error=$result");
     }
     ?>
 </head>
-
 <body>
     <div class="container">
         <!-- 標題 -->
         <h1>註冊帳戶</h1>
 
-        <?php
-        if (isset($_GET["error"])) {                                        // 返回訊息說明
-            $message = $_GET["error"];
-            echo("<div class='messagebox-error'><h3>$message</h3></div>");
-        }
-        ?>
+        <!-- 接收登入結果訊息 -->
+        <?php if (isset($_GET["error"])) { $msg = $_GET["error"]; echo("<div class='error-messagebox'><h3>$msg</h3></div>"); } ?>
 
         <!-- 表單 -->
         <form method="POST" action="Register.php">
             <!-- 帳戶名稱輸入框 -->
             <div class="field">
-                <input type="text" name="UserName" title="帳戶名稱" required>
+                <input type="text" name="UserNameTextBox" title="帳戶名稱" required>
                 <span></span>
                 <label>帳戶名稱：</label>
             </div>
 
             <!-- 信箱輸入框 -->
             <div class="field">
-                <input type="email" name="UserEnmail" title="帳戶信箱" required>
+                <input type="email" name="UserEmailTextBox" title="帳戶信箱" required>
                 <span></span>
                 <label>帳戶信箱：</label>
             </div>
 
             <!-- 密碼輸入框 -->
             <div class="field">
-                <input type="password" name="UserPassword" title="帳戶密碼" required>
+                <input type="password" name="UserPasswordTextBox" title="帳戶密碼" required>
                 <span></span>
                 <label>帳戶密碼：</label>
             </div>
 
             <!-- 送出 -->
-            <input type="submit" name="login" value="註冊">
+            <input type="submit" name="RegisterButton" value="註冊">
         </form>
 
         <!-- 跳轉登入頁面 -->
-        <div class="singup">已經擁有一個帳戶嗎？<a href="login.php">點擊登入！</a></div>
+        <div class="login">已經擁有一個帳戶嗎？<a href="login.php">點擊登入！</a></div>
     </div>
-
-    <!-- 網頁尾部公司聲明 -->
-	<div class="copyright">
-		<p>© 2022 by CatHouse. Just a practice template</p>
-	</div>
 </body>
 </html>

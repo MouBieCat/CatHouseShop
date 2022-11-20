@@ -1,11 +1,7 @@
 /* 通用樣式表 */
 
 * {
-    /* 外框 */
     margin: 0;
-    /* 內框 */
     padding: 0;
     box-sizing: border-box;
-    /* 字體 */
-    font-family: "Poppins", sans-serif;
 }

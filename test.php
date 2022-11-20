@@ -1,5 +1,9 @@
 <?php
 include "DataBaseConnection.php";
+
+$obj = new SQLConnect();
+
+
 // final class ProductConnection extends MySQLConnect {
 //     private $m_ColumnSize = 0;
 //     private $m_Column     = "*";
