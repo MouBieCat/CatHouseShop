@@ -69,9 +69,6 @@
         }
     }
 
-    // 開啟 SESSION 功能
-    session_start();
-
     // 判斷是否有提交
     if (isset($_POST["UserNameTextBox"]) && isset($_POST["UserEmailTextBox"]) && isset($_POST["UserPasswordTextBox"])) {
         // 建立資料庫驗證對象

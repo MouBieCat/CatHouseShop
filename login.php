@@ -95,7 +95,7 @@
 
         <!-- 表單 -->
         <form method="POST" action="Login.php">
-            <!-- 信箱輸入框 -->
+            <!-- 帳戶名稱輸入框 -->
             <div class="field">
                 <input type="test" name="UserNameTextBox" title="帳戶名稱" required>
                 <span></span>
