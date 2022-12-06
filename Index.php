@@ -11,7 +11,52 @@
     <!-- 連結 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="./Index.css">
-    <?php?>
+    <?php
+    /* <!-- 代碼 --> */
+    include "DataBaseConnection.php";
+    final class CommentDataBaseConnect extends DataBaseConnect {
+        /**
+        * 資料庫 Comments 表資訊
+        * 
+        * CREATE TABLE Comments(
+        *   cName varchar(20) NOT NULL, 
+        *   cStars tinyint NOT NULL, 
+        *   cMessage varchar(150) NOT NULL, 
+        *   cTime varchar(20) NOT NULL
+        * );
+        * 
+        * DESCRIBE Comments;
+        * +----------+--------------+------+-----+---------+-------+
+        * | Field    | Type         | Null | Key | Default | Extra |
+        * +----------+--------------+------+-----+---------+-------+
+        * | cName    | varchar(20)  | NO   |     | NULL    |       |
+        * | cStars   | tinyint      | NO   |     | NULL    |       |
+        * | cMessage | varchar(150) | NO   |     | NULL    |       |
+        * | cTime    | varchar(20)  | NO   |     | NULL    |       |
+        * +----------+--------------+------+-----+---------+-------+
+        */
+        /**
+        * 建構子
+        */
+        public function __construct() {
+            parent::__construct();
+        }
+
+        /**
+        * 從資料庫隨機撈取數比資料
+        * 
+        * @param $_Count 撈取數量
+        * @return 撈取結果
+        */
+        public function getComments(int $_Count = 3) {
+            $selectCommand = "SELECT * FROM Comments WHERE cStars=5 order by rand() LIMIT $_Count";
+            return $this->m_ConnectObject->query($selectCommand);
+        }
+    }
+
+    $commentConnection = new CommentDataBaseConnect();
+    $commentResult     = $commentConnection->getComments();
+    ?>
 </head>
 <body>
     <!-- 工具列 --> 
@@ -67,111 +112,29 @@
 
     <!-- 評論 -->
     <section class="review" id="review">
-        <h1 class="heading">客戶<span>評論</span> </h1>
+        <h1 class="heading">買家<span>評論</span> </h1>
         <!-- 評論方框 -->
         <div class="box-container">
-            <?php
-            /* <!-- 代碼 --> */
-            include "DataBaseConnection.php";
-            final class CommentDataBaseConnect extends DataBaseConnect {
-                /**
-                 * 資料庫 Comments 表資訊
-                 * 
-                 * CREATE TABLE Comments(
-                 *   cName varchar(20) NOT NULL, 
-                 *   cStars tinyint NOT NULL, 
-                 *   cMessage varchar(150) NOT NULL, 
-                 *   cTime varchar(20) NOT NULL
-                 * );
-                 * 
-                 * DESCRIBE Comments;
-                 * +----------+--------------+------+-----+---------+-------+
-                 * | Field    | Type         | Null | Key | Default | Extra |
-                 * +----------+--------------+------+-----+---------+-------+
-                 * | cName    | varchar(20)  | NO   |     | NULL    |       |
-                 * | cStars   | tinyint      | NO   |     | NULL    |       |
-                 * | cMessage | varchar(150) | NO   |     | NULL    |       |
-                 * | cTime    | varchar(20)  | NO   |     | NULL    |       |
-                 * +----------+--------------+------+-----+---------+-------+
-                 */
-                /**
-                * 建構子
-                */
-                public function __construct() {
-                    parent::__construct();
-                }
-
-                /**
-                 * 從資料庫隨機撈取數比資料
-                 * 
-                 * @param $_Count 撈取數量
-                 * @return 撈取結果
-                 */
-                public function getComments(int $_Count = 3) {
-                    $selectCommand = "SELECT * FROM Comments order by rand() LIMIT $_Count";
-                    return $this->m_ConnectObject->query($selectCommand);
-                }
-            }
-            // 建立資料庫請求物件
-            $connection = new CommentDataBaseConnect();
-            $result     = $connection->getComments();
-            ?>
+        <?php while ($commentRow = $commentResult->fetch_assoc()) {  /* 處理顯示隨機三條五星評論 */ ?>
             <div class="box">
+                <!-- 五星顯示 -->
                 <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
                 </div>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti asperiores laboriosam praesentium enim maiores? Ad repellat voluptates alias facere repudiandae dolor accusamus enim ut odit, aliquam nesciunt eaque nulla dignissimos.</p>
+                <!-- 評論內容 -->
+                <p> <?php echo($commentRow["cMessage"]) ?> </p>
+                <!-- 評論庫戶資訊 -->
                 <div class="user">
+                    <!-- 庫戶頭貼 -->
                     <img src="images/pic-1.png" alt="">
+                    <!-- 庫戶資訊 -->
                     <div class="user-info">
-                        <h3>john deo</h3>
-                        <span>happy customer</span>
+                        <h3> <?php echo($commentRow["cName"]) ?> </h3>
+                        <span> <?php echo($commentRow["cTime"]) ?> </span>
                     </div>
                 </div>
-                <span class="fas fa-quote-right"></span>
             </div>
-
-            <div class="box">
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti asperiores laboriosam praesentium enim maiores? Ad repellat voluptates alias facere repudiandae dolor accusamus enim ut odit, aliquam nesciunt eaque nulla dignissimos.</p>
-                <div class="user">
-                    <img src="images/pic-2.png" alt="">
-                    <div class="user-info">
-                        <h3>john deo</h3>
-                        <span>happy customer</span>
-                    </div>
-                </div>
-                <span class="fas fa-quote-right"></span>
-            </div>
-
-            <div class="box">
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti asperiores laboriosam praesentium enim maiores? Ad repellat voluptates alias facere repudiandae dolor accusamus enim ut odit, aliquam nesciunt eaque nulla dignissimos.</p>
-                <div class="user">
-                    <img src="images/pic-3.png" alt="">
-                    <div class="user-info">
-                        <h3>john deo</h3>
-                        <span>happy customer</span>
-                    </div>
-                </div>
-                <span class="fas fa-quote-right"></span>
-            </div>
+        <?php } ?>
         </div>
     </section>
 </body>
