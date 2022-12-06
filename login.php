@@ -1,4 +1,5 @@
 <!-- 登入網頁 -->
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
     <!-- 網頁元素 -->
@@ -8,11 +9,10 @@
     <title>登入 - 貓之家購物網</title>
 
     <!-- 連結 -->
-    <link rel="stylesheet" type="text/css" href="./CommonStyle.css">
     <link rel="stylesheet" type="text/css" href="./Login.css">
 
-    <!-- 代碼 -->
     <?php
+    /* <!-- 代碼 --> */
     include "DataBaseConnection.php";
     final class LoginDataBaseConnect extends DataBaseConnect {
         /**
