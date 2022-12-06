@@ -48,8 +48,8 @@
         * @param $_Count 撈取數量
         * @return 撈取結果
         */
-        public function getComments(int $_Count = 3) {
-            $selectCommand = "SELECT * FROM Comments WHERE cStars=5 order by rand() LIMIT $_Count";
+        public function getComments(int $_Count = 3, int $_Stars = 5) {
+            $selectCommand = "SELECT * FROM Comments WHERE cStars=$_Stars order by rand() LIMIT $_Count";
             return $this->m_ConnectObject->query($selectCommand);
         }
     }
@@ -124,11 +124,11 @@
                 <!-- 評論內容 -->
                 <p> <?php echo($commentRow["cMessage"]) ?> </p>
                 <!-- 評論庫戶資訊 -->
-                <div class="user">
+                <div class="account-box">
                     <!-- 庫戶頭貼 -->
                     <img src="images/pic-1.png" alt="">
                     <!-- 庫戶資訊 -->
-                    <div class="user-info">
+                    <div>
                         <h3> <?php echo($commentRow["cName"]) ?> </h3>
                         <span> <?php echo($commentRow["cTime"]) ?> </span>
                     </div>

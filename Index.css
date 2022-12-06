@@ -209,13 +209,13 @@ header .fa-bars {
     padding-top: 2rem;
 }
 
-.review .box-container .box .user {
+.review .box-container .box .account-box {
     display: flex;
     align-items: center;
     padding-top: 2rem;
 }
 
-.review .box-container .box .user img {
+.review .box-container .box .account-box img {
     height:6rem;
     width:6rem;
     border-radius: 50%;
@@ -223,12 +223,12 @@ header .fa-bars {
     margin-right: 1rem;
 }
 
-.review .box-container .box .user h3 {
+.review .box-container .box .account-box h3 {
     font-size: 2rem;
     color:#333;
 }
 
-.review .box-container .box .user span {
+.review .box-container .box .account-box span {
     font-size: 1.5rem;
     color:#999;
 }
