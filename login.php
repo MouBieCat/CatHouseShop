@@ -12,8 +12,7 @@
     <!-- 連結 -->
     <link rel="stylesheet" type="text/css" href="./Login.css">
 
-    <?php
-    /* <!-- 代碼 --> */
+    <?php /* PHP 代碼塊 */
     include "DataBaseConnection.php";
     final class LoginDataBaseConnect extends DataBaseConnect {
         /**

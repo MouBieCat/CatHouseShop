@@ -209,6 +209,135 @@ header .fa-bars {
     font-size: 1.3rem;
 }
 
+.comments-container .comments-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap:1.5rem;
+}
+
+.comments-container .comments-box .comment {
+    flex:1 1 30rem;
+    box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.1);
+    border-radius: .5rem;
+    padding:3rem 2rem;
+    position: relative;
+    border:.1rem solid rgba(0,0,0,.1);
+}
+
+.comments-container .comments-box .fa-quote-right {
+    position: absolute;
+    bottom:3rem; right:3rem;
+    font-size: 6rem;
+    color:#eee;
+}
+
+.comments-container .comments-box .comment .stars i {
+    color:var(--pink);
+    font-size: 2rem;
+}
+
+.comments-container .comments-box .comment p {
+    color:#999;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    padding-top: 2rem;
+}
+
+.comments-container .comments-box .comment .user {
+    display: flex;
+    align-items: center;
+    padding-top: 2rem;
+}
+
+.comments-container .comments-box .comment .user img {
+    height:6rem;
+    width:6rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+.comments-container .comments-box .comment .user h3 {
+    font-size: 2rem;
+    color:#333;
+}
+
+.comments-container .comments-box .comment .user span {
+    font-size: 1.5rem;
+    color:#999;
+}
+
+.comments-container .comment-row {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    gap:1.5rem;
+    align-items: center;
+    border-top: 3px solid var(--pink);
+    margin-top: 20px;
+}
+
+.comments-container .comment-row .image {
+    flex:1 1 40rem;
+}
+
+.comments-container .comment-row .image img {
+    width: 100%;
+}
+
+.comment-box {
+    flex:1 1 40rem;
+    font-size: 1.5rem;
+}
+
+.comment-box p {
+    padding: 20px;
+    border:.1rem solid rgba(0,0,0,.1);
+    border-radius: .5rem;
+    margin-top: 20px ;
+    margin-bottom: 20px;
+}
+
+.comments-container .comment-row .comment-box form {
+    flex:1 1 40rem;
+    padding:2rem 2.5rem;
+    box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.1);
+    border:.1rem solid rgba(0,0,0,.1);
+    background: #fff;
+    border-radius: .5rem;
+}
+
+.comments-container .comment-row .comment-box form .field {
+    padding: 1rem;
+    font-size: 1.7rem;
+    color:#333;
+    text-transform: none;
+    border:.1rem solid rgba(0,0,0,.1);
+    border-radius: .5rem;
+    margin:.7rem 0;
+    width: 100%;
+    resize: none;
+}
+
+.comments-container .comment-row .comment-box form .field:focus {
+    border-color: var(--pink);
+}
+
+.comments-container .comment-row .comment-box form .btn {
+    padding:1rem;
+    font-size: 1.7rem;
+    color:#333;
+    text-transform: none;
+    border:.1rem solid rgba(0,0,0,.1);
+    border-radius: .5rem;
+    margin:.7rem 0;
+    width: 100%;
+    cursor: pointer;
+}
+
+.comments-container .comment-row .comment-box form .btn:hover {
+    background:var(--pink);
+}
+
 .footer .credit {
     text-align: center;
     padding:1.5rem;
@@ -222,6 +351,16 @@ header .fa-bars {
 
 .footer .credit span {
     color:var(--pink);
+}
+
+.comment-messagebox {
+    flex:1 1 40rem;
+    margin-top: 20px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: var(--pink);
+    color: white;
+    padding: 10px;
 }
 
 @media (max-width:991px) {
