@@ -19,21 +19,21 @@
          * 資料庫 Accounts 表資訊
          * 
          * CREATE TABLE Accounts(
-         *   uName varchar(20) PRIMARY KEY NOT NULL, 
-         *   uEmail varchar(64) NOT NULL, 
-         *   uPasswd varchar(32) NOT NULL, 
-         *   uRegisterTime varchar(20) NOT NULL
+         *   uName             varchar(16) PRIMARY KEY NOT NULL, 
+         *   uPasswd           varchar(32)             NOT NULL, 
+         *   uUUID             varchar(36)             NOT NULL, 
+         *   uRegistrationTime varchar(20)             NOT NULL
          * );
          * 
          * DESCRIBE Accounts;
-         * +---------------+-------------+------+-----+---------+-------+
-         * | Field         | Type        | Null | Key | Default | Extra |
-         * +---------------+-------------+------+-----+---------+-------+
-         * | uName         | varchar(20) | NO   | PRI | NULL    |       |
-         * | uEmail        | varchar(64) | NO   |     | NULL    |       |
-         * | uPasswd       | varchar(32) | NO   |     | NULL    |       |
-         * | uRegisterTime | varchar(20) | NO   |     | NULL    |       |
-         * +---------------+-------------+------+-----+---------+-------+
+         * +-------------------+-------------+------+-----+---------+-------+
+         * | Field             | Type        | Null | Key | Default | Extra |
+         * +-------------------+-------------+------+-----+---------+-------+
+         * | uName             | varchar(16) | NO   | PRI | NULL    |       |
+         * | uPasswd           | varchar(32) | NO   |     | NULL    |       |
+         * | uUUID             | varchar(36) | NO   |     | NULL    |       |
+         * | uRegistrationTime | varchar(20) | NO   |     | NULL    |       |
+         * +-------------------+-------------+------+-----+---------+-------+
          */
 
         /**
@@ -49,22 +49,35 @@
          * @param $_Passwd 帳戶密碼
          * @return 提交結果訊息
          */
-        public function tryLogin(string $_Name, string $_Passwd) : string {
-            // 檢查是否為空值
-            if (empty($_Name) || empty($_Passwd)) return "帳戶名稱或是密碼欄位不可為空。";
+        public function tryLogin(string $_Name, string $_Passwd) : array {
+            $returnResult["RESULT"] = FALSE; $returnResult["CONTENT"] = NULL;
 
-            // 根據 $_Name 取出帳戶密碼
-            $selectPasswdCommand = "SELECT uPasswd FROM Accounts WHERE uName='$_Name'";
-            $selectPasswdResult  = $this->m_ConnectObject->query($selectPasswdCommand);
+            // 檢查是否為空值
+            if (empty($_Name) || empty($_Passwd)) {
+                $returnResult["CONTENT"] = "帳戶名稱或是密碼欄位不可為空。";
+                return $returnResult;
+            }
+
+            // 根據名稱與密碼取出對應的資料
+            $selectAccountCommand = "SELECT uName, uPasswd, uUUID FROM Accounts WHERE uName='$_Name'";
+            $selectAccountResult  = $this->m_ConnectObject->query($selectAccountCommand);
 
             // 判斷是否有任何的數據
-            if ($selectPasswdResult->num_rows === 0) return "帳戶名稱還沒有被註冊，請問是我們的新朋友嗎？";
+            if ($selectAccountResult->num_rows === 0) {
+                $returnResult["CONTENT"] = "帳戶名稱還沒有被註冊，請問是我們的新朋友嗎？";
+                return $returnResult;
+            }
 
             // 處理資料並判斷帳戶密碼
-            $passwdRow = $selectPasswdResult->fetch_assoc();
-            if (strcmp($_Passwd, $passwdRow["uPasswd"]) === 0) 
-                return "True";               // 登入成功
-            return "帳戶名稱或密碼輸入錯誤。"; // 登入失敗
+            $accountRow = $selectAccountResult->fetch_assoc();
+            if ($_Name === $accountRow["uName"] && $_Passwd === $accountRow["uPasswd"]) {
+                $returnResult["RESULT"] = TRUE;
+                $returnResult["CONTENT"] = $accountRow["uUUID"];
+                return $returnResult;
+            }
+
+            $returnResult["CONTENT"] = "帳戶名稱或密碼輸入錯誤。";
+            return $returnResult;
         }
     }
 
@@ -74,14 +87,18 @@
     // 判斷是否有提交
     if (isset($_POST["UserNameTextBox"]) && isset($_POST["UserPasswordTextBox"])) {
         // 建立資料庫驗證對象
-        $connection = new LoginDataBaseConnect();
-        $result     = $connection->tryLogin($_POST["UserNameTextBox"], $_POST["UserPasswordTextBox"]);
+        $connection  = new LoginDataBaseConnect();
+        $resultArray = $connection->tryLogin($_POST["UserNameTextBox"], $_POST["UserPasswordTextBox"]);
 
-        // 如果登入成功
-        if ($result === "True") {
-            $_SESSION["SESSION_USER"] = $_POST["UserNameTextBox"];
+        // 判斷是否登入驗證成功
+        if ($resultArray["RESULT"] === TRUE) {
+            $_SESSION["SESSION_USER"] = $resultArray["CONTENT"];
             header("Location: index.php");
-        } else header("Location: Login.php?error=$result");
+            return;
+        }
+
+        $resultMessage = $resultArray["CONTENT"];
+        header("Location: Login.php?error=$resultMessage");
     }
     ?>
 </head>

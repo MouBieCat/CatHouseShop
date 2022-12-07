@@ -19,21 +19,21 @@
          * 資料庫 Accounts 表資訊
          * 
          * CREATE TABLE Accounts(
-         *   uName varchar(20) PRIMARY KEY NOT NULL, 
-         *   uEmail varchar(64) NOT NULL, 
-         *   uPasswd varchar(32) NOT NULL, 
-         *   uRegisterTime varchar(20) NOT NULL
+         *   uName             varchar(16) PRIMARY KEY NOT NULL, 
+         *   uPasswd           varchar(32)             NOT NULL, 
+         *   uUUID             varchar(36)             NOT NULL, 
+         *   uRegistrationTime varchar(20)             NOT NULL
          * );
          * 
          * DESCRIBE Accounts;
-         * +---------------+-------------+------+-----+---------+-------+
-         * | Field         | Type        | Null | Key | Default | Extra |
-         * +---------------+-------------+------+-----+---------+-------+
-         * | uName         | varchar(20) | NO   | PRI | NULL    |       |
-         * | uEmail        | varchar(64) | NO   |     | NULL    |       |
-         * | uPasswd       | varchar(32) | NO   |     | NULL    |       |
-         * | uRegisterTime | varchar(20) | NO   |     | NULL    |       |
-         * +---------------+-------------+------+-----+---------+-------+
+         * +-------------------+-------------+------+-----+---------+-------+
+         * | Field             | Type        | Null | Key | Default | Extra |
+         * +-------------------+-------------+------+-----+---------+-------+
+         * | uName             | varchar(16) | NO   | PRI | NULL    |       |
+         * | uPasswd           | varchar(32) | NO   |     | NULL    |       |
+         * | uUUID             | varchar(36) | NO   |     | NULL    |       |
+         * | uRegistrationTime | varchar(20) | NO   |     | NULL    |       |
+         * +-------------------+-------------+------+-----+---------+-------+
          */
 
          /**
@@ -50,35 +50,54 @@
          * @param $_Passwd 帳戶密碼
          * @return 提交結果訊息
          */
-        public function tryRegister(string $_Name, string $_Email, string $_Passwd) {
+        public function tryRegister(string $_Name, string $_Passwd) : array {
+            $returnResult["RESULT"] = FALSE; $returnResult["CONTENT"] = NULL;
+
             // 檢查是否為空值
-            if (empty($_Name) || empty($_Email) || empty($_Passwd)) return "帳戶名稱、帳戶信箱或是密碼欄位不可為空。";
+            if (empty($_Name) || empty($_Passwd)) {
+                $returnResult["CONTENT"] = "帳戶名稱或是密碼欄位不可為空。";
+                return $returnResult;
+            }
 
             // 檢查數據使否符合資料庫規格
-            if (strlen($_Name) > 20 || strlen($_Name) < 4) return "帳戶名稱長度過短或超出最大長度。";
-            if (strlen($_Email) > 64) return "電子郵件長度超出最大長度。";
-            if (strlen($_Passwd) > 32 || strlen($_Passwd) < 12) return "密碼長度過短或超出最大長度。";
+            if (strlen($_Name) > 16 || strlen($_Name) < 4) {
+                $returnResult["CONTENT"] = "帳戶名稱長度過短或超出最大長度。";
+                return $returnResult;
+            }
+
+            if (strlen($_Passwd) > 32 || strlen($_Passwd) < 12) {
+                $returnResult["CONTENT"] = "密碼長度過短或超出最大長度。";
+                return $returnResult;
+            }
 
             // 開始寫入到數據庫中
-            $insertCommand = "INSERT INTO Accounts (uName, uEmail, uPasswd, uRegisterTime) VALUES ('$_Name', '$_Email', '$_Passwd', now());";
+            $insertCommand = "INSERT INTO Accounts (uName, uPasswd, uUUID, uRegistrationTime) VALUES ('$_Name', '$_Passwd', uuid(), now());";
             $insertResult  = $this->m_ConnectObject->query($insertCommand);
 
-            // 資料是否插入成功
-            if ($insertResult) return "True";
-            return "該帳戶名稱已經被使用。";
+            // 判斷資料是否插入成功
+            if ($insertResult) {
+                $returnResult["RESULT"] = TRUE;
+                return $returnResult;
+            }
+
+            $returnResult["CONTENT"] = "該帳戶名稱已經被使用。";
+            return $returnResult;
         }
     }
 
     // 判斷是否有提交
-    if (isset($_POST["UserNameTextBox"]) && isset($_POST["UserEmailTextBox"]) && isset($_POST["UserPasswordTextBox"])) {
+    if (isset($_POST["UserNameTextBox"]) && isset($_POST["UserPasswordTextBox"])) {
         // 建立資料庫驗證對象
-        $connection = new RegisterDataBaseConnect();
-        $result     = $connection->tryRegister($_POST["UserNameTextBox"], $_POST["UserEmailTextBox"], $_POST["UserPasswordTextBox"]);
+        $connection  = new RegisterDataBaseConnect();
+        $resultArray = $connection->tryRegister($_POST["UserNameTextBox"], $_POST["UserPasswordTextBox"]);
 
-        // 如果註冊成功
-        if ($result === "True") {
+        if ($resultArray["RESULT"] === TRUE) {
             header("Location: login.php");
-        } else header("Location: Register.php?error=$result");
+            return;
+        }
+
+        $resultMessage = $resultArray["CONTENT"];
+        header("Location: Register.php?error=$resultMessage");
     }
     ?>
 </head>
@@ -97,13 +116,6 @@
                 <input type="text" name="UserNameTextBox" title="帳戶名稱" required>
                 <span></span>
                 <label>帳戶名稱：</label>
-            </div>
-
-            <!-- 信箱輸入框 -->
-            <div class="field">
-                <input type="email" name="UserEmailTextBox" title="帳戶信箱" required>
-                <span></span>
-                <label>帳戶信箱：</label>
             </div>
 
             <!-- 密碼輸入框 -->
