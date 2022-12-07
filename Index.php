@@ -161,6 +161,8 @@
     // 判斷是否為發表評論 & 是否已經登入
     if (isset($_POST["comment"]) && isset($_SESSION["SESSION_USER"])) {
         $sendCommentResult = $commentsConnect->sendComment($_SESSION["SESSION_USER"], 5, $_POST["message"]);
+        header("Location: Index.php?comment=$sendCommentResult");
+        return;
     }
     ?>
 </head>
@@ -289,7 +291,7 @@
         <div class="comment-row">
             <div class="comment-box">
                 <!-- 接收發送評論結果 -->
-            <?php if (isset($sendCommentResult)) echo("<div class='comment-messagebox'><h3>$sendCommentResult</h3></div>"); ?>
+            <?php if (isset($_GET["comment"])) $message = $_GET["comment"]; echo("<div class='comment-messagebox'><h3>$message</h3></div>"); ?>
             
                 <!-- 評論須知 -->
                 <p>尊重每一個人。 絕對不容忍騷擾、政治迫害、性別歧視、種族主義或仇恨言論。</p>
