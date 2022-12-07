@@ -7,6 +7,7 @@
     <meta http-equiv="X-YA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>註冊 - 貓之家購物網</title>
+    <link rel="shortcut icon" href="#">
 
     <!-- 連結 -->
     <link rel="stylesheet" type="text/css" href="./Register.css">
