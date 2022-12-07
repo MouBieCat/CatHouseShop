@@ -152,15 +152,17 @@
     <!-- 首頁大綱 -->
     <section class="home" id="home">
         <div class="content">
-            <h3>鮮花</h3>
-            <span>天然及美麗的花</span>
+            <h3>鬱金香</h3>
+            <span>天然及美麗的鬱金香</span>
             <p>鬱金香花是一株、一莖、一花，花莖都筆直生長，亭亭玉立，很像荷花，花葉、花莖、花瓣都向上生長，看上去是那麼剛勁有力，意氣風發。鬱金香不像其它花那樣大開大放，而是半開半放。從遠處看，它像花蕾，含苞欲放；走進了看，它確實開放着，還能看到被花粉緊緊包着的花蕊，給人一種含蓄的美。</p>
         </div>
     </section>
     
     <!-- 關於我們 -->
     <section class="about" id="about">
+        <!-- 標題 -->
         <h1 class="heading"> <span>關於</span>我們</h1>
+
         <div class="row">
             <!-- 影片 -->
             <div class="video-container">
@@ -212,18 +214,21 @@
     <section class="products" id="products">
         <!-- 標題 -->
         <h1 class="heading">所有<span>商品</span> </h1>
+
         <!-- 商品內容框 -->
         <div class="box-container">
         <?php if ($productResultForPage->num_rows === 0) echo("<div class='nothing-box'><h3>暫時沒有更多的商品<h3></div>"); else { /* 如果沒有任何商品 [header] */ ?>
         <?php while ($productRow = $productResultForPage->fetch_assoc()) { /* 處理並顯示當前頁數的商品 [header] */ ?>
             <!-- 商品 -->
             <div class="box">
+                <!-- 商品圖片卡 -->
                 <div class="image">
                     <img src= "Products/<?php echo($productRow["pImageSrc"]); ?>" alt="">
                     <div class="icons">
                         <a href="#" class="fas fa-heart"></a> <a href="#" class="cart-btn">add to cart</a> <a href="#" class="fas fa-share"></a>
                     </div>
                 </div>
+                <!-- 商品資訊 -->
                 <div class="content">
                     <h3> <?php echo($productRow["pTitle"]); ?> </h3>
                     <div class="price"> $<?php echo($productRow["pPrice"]); ?> <span> $<?php echo($productRow["pDiscountProduct"]); ?> </span></div>
@@ -236,25 +241,27 @@
         <div class="page-container">
         <?php /* 分頁處理代碼塊 */
         /* 是否有更多頁數 ( _NOW - 2 > 1 ) */
-        if (($GlobalValues_Page - 2) > 1) echo("<button class='more-button'>...</button>");
-        for ($tempPage = $GlobalValues_Page - 2; $tempPage <= $productTotalPage; $tempPage++) {
+        if (($GlobalValues_Page - 2) > 1) echo("<a href='index.php?page=1'>1 ...</a>");
+        for ($tempPage = $GlobalValues_Page - 2; $tempPage <= $GlobalValues_Page + 2; $tempPage++) {
             /* 如果頁數不合法 */
             if ($tempPage < 1 || $tempPage > $productTotalPage) continue;
             /* 如果是當前頁數 */
             if ($tempPage == $GlobalValues_Page) {
-                echo("<button class='select-button'>$tempPage</button>");
+                echo("<a class='select-button' href='index.php?page=$tempPage'>$tempPage</a>");
                 continue;
-            } echo("<a href='index.php?page=$tempPage'><button class='noselect-button'>$tempPage</button></a>");
+            } echo("<a href='index.php?page=$tempPage'>$tempPage</a>");
         }
         /* 是否有更多頁數 ( _NOW + 2 < _MAX ) */
-        if (($GlobalValues_Page + 2) < $productTotalPage) echo("<button class='more-button'>...</button>");
+        if (($GlobalValues_Page + 2) < $productTotalPage) echo("<a href='index.php?page=$productTotalPage'>... $productTotalPage</a>");
         ?>
         </div>
     </section>
 
     <!-- 評論 -->
     <section class="review" id="review">
+        <!-- 標題 -->
         <h1 class="heading">買家<span>評論</span> </h1>
+
         <!-- 評論方框 -->
         <div class="box-container">
         <?php if ($commentResult->num_rows === 0) echo("<div class='nothing-box'><h3>暫時沒有更多的評論<h3></div>"); else { /* 如果沒有任何評論 [header] */ ?>

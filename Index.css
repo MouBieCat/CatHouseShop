@@ -297,7 +297,8 @@ header .fa-bars {
     padding: 10px 10px;
 }
 
-.page-container button {
+.products .page-container a {
+    color: #666;
     min-width: 2.5rem;
     text-align: center;
     font-size: 1.75rem;
@@ -308,22 +309,9 @@ header .fa-bars {
     border-radius: 10px;
 }
 
-.products .select-button {
+.products .page-container .select-button {
     color: white;
 	background: var(--pink);
-}
-
-.products .noselect-button {
-	color: rgba(0,0,0,.4);
-    cursor: pointer;
-}
-
-.products .more-button {
-	color: rgba(0,0,0,.4);
-}
-
-.products button[class="noselect-button"]:hover {
-	background: #ee76b0
 }
 
 .review .box-container {
