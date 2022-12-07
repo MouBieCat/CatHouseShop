@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-YA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>首頁 - 貓之家購物網</title>
+    <title>首頁 - 貓之家 | 最好的花店賣家</title>
 
     <!-- 連結 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -14,6 +14,62 @@
     <?php
     /* <!-- 代碼 --> */
     include "DataBaseConnection.php";
+
+    final class ProductsDataBaseConnect extends DataBaseConnect {
+        /**
+         * 資料庫 Products 表資訊
+         * 
+         * CREATE TABLE Products(
+         *   pUUID varchar(36) PRIMARY KEY NOT NULL, 
+         *   pTitle varchar(32) NOT NULL, 
+         *   pImageSrc varchar(256) NOT NULL, 
+         *   pPrice INT NOT NULL, 
+         *   pDiscountProduct INT NOT NULL DEFAULT 0
+         * );
+         * 
+         * DESCRIBE Products;
+         * +------------------+--------------+------+-----+---------+-------+
+         * | Field            | Type         | Null | Key | Default | Extra |
+         * +------------------+--------------+------+-----+---------+-------+
+         * | pUUID            | varchar(36)  | NO   | PRI | NULL    |       |
+         * | pTitle           | varchar(32)  | NO   |     | NULL    |       |
+         * | pImageSrc        | varchar(256) | NO   |     | NULL    |       |
+         * | pPrice           | int          | NO   |     | NULL    |       |
+         * | pDiscountProduct | int          | NO   |     | 0       |       |
+         * +------------------+--------------+------+-----+---------+-------+
+         */
+
+        /**
+        * 建構子
+        */
+        public function __construct() {
+            parent::__construct();
+        }
+
+        /**
+         * 獲取指定頁數的商品
+         * 
+         * @param _Page  頁數
+         * @param _Count 數量
+         * @return 查詢結果
+         */
+        public function getProductForPage(int $_Page = 1, int $_Count = 5) {
+            $startIndex = ($_Page - 1) * $_Count;
+            $selectCommand = "SELECT * FROM Products LIMIT $startIndex, $_Count";
+            return $this->m_ConnectObject->query($selectCommand);
+        }
+
+        /**
+         * 獲取所有商品
+         * 
+         * @return 查詢結果
+         */
+        public function getProducts() {
+            $selectCommand = "SELECT * FROM Products";
+            return $this->m_ConnectObject->query($selectCommand);
+        }
+    }
+
     final class CommentDataBaseConnect extends DataBaseConnect {
         /**
         * 資料庫 Comments 表資訊
@@ -54,12 +110,22 @@
         }
     }
 
+    /* 商品資料庫連結 */
+    $productConnection = new ProductsDataBaseConnect();
+    $productResultAll  = $productConnection->getProducts();
+    $productTotalPage  = ceil($productResultAll->num_rows / 5);
+
+    /* 頁數處理 */
+    $GlobalValues_Page = 1;
+    if (isset($_GET["page"]) && $_GET["page"] <= $productTotalPage && $_GET["page"] > 0) $GlobalValues_Page = $_GET["page"]; // 異常頁數處理判斷：如果指定頁數大於最大頁數
+    $productResultForPage = $productConnection->getProductForPage($GlobalValues_Page);
+
+    /* 評論資料庫連結 */
     $commentConnection = new CommentDataBaseConnect();
     $commentResult     = $commentConnection->getComments();
     ?>
 </head>
 <body>
-    <!-- 工具列 --> 
     <header>
         <!-- 快捷欄 (移動端或網頁顯示過小) -->
         <input type="checkbox" name="" id="toggler">
@@ -88,7 +154,7 @@
         <div class="content">
             <h3>鮮花</h3>
             <span>天然及美麗的花</span>
-            <p>油菜花四片花瓣，整齊地圍繞著花蕊，樸實個性。花瓣十分精致，有細細的紋路，那是技藝多么高超的雕刻家也無法雕琢出來的。中間的花蕊彎曲著湊在一塊，仿佛在說著悄悄話。它有粗壯的根莖，茂密的葉，有著像栽種它們的農民們一樣的淳樸與粗獷。</p>
+            <p>鬱金香花是一株、一莖、一花，花莖都筆直生長，亭亭玉立，很像荷花，花葉、花莖、花瓣都向上生長，看上去是那麼剛勁有力，意氣風發。鬱金香不像其它花那樣大開大放，而是半開半放。從遠處看，它像花蕾，含苞欲放；走進了看，它確實開放着，還能看到被花粉緊緊包着的花蕊，給人一種含蓄的美。</p>
         </div>
     </section>
     
@@ -99,7 +165,7 @@
             <!-- 影片 -->
             <div class="video-container">
                 <video src="./Resource/Index-AboutVideo.mp4" loop autoplay muted></video>
-                <h3>Best Flower Seller</h3>
+                <h3>最 佳 的 花 店 鋪</h3>
             </div>
             <!-- 主內容 -->
             <div class="content">
@@ -110,12 +176,89 @@
         </div>
     </section>
 
+    <!-- 特徵 -->
+    <section class="icons-container">
+        <!-- 特徵卡 -->
+        <div class="icons">
+            <img src="./Resource/Index-Icon1.png" alt="">
+            <div>
+                <h3>免運費</h3> <span>在所有訂單上不收取運費</span>
+            </div>
+        </div>
+        <!-- 特徵卡 -->
+        <div class="icons">
+            <img src="./Resource/Index-Icon2.png" alt="">
+            <div>
+                <h3>退款保證</h3> <span>我們保證在出貨七天後退款</span>
+            </div>
+        </div>
+        <!-- 特徵卡 -->
+        <div class="icons">
+            <img src="./Resource/Index-Icon3.png" alt="">
+            <div>
+                <h3>優惠及禮品</h3> <span>註冊我們的會員可享有會員優惠及禮物</span>
+            </div>
+        </div>
+        <!-- 特徵卡 -->
+        <div class="icons">
+            <img src="./Resource/Index-Icon4.png" alt="">
+            <div>
+                <h3>安全支付</h3><span>可使用信用卡支付訂單</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 商品展示 -->
+    <section class="products" id="products">
+        <!-- 標題 -->
+        <h1 class="heading">所有<span>商品</span> </h1>
+        <!-- 商品內容框 -->
+        <div class="box-container">
+        <?php if ($productResultForPage->num_rows === 0) echo("<div class='nothing-box'><h3>暫時沒有更多的商品<h3></div>"); else { /* 如果沒有任何商品 [header] */ ?>
+        <?php while ($productRow = $productResultForPage->fetch_assoc()) { /* 處理並顯示當前頁數的商品 [header] */ ?>
+            <!-- 商品 -->
+            <div class="box">
+                <div class="image">
+                    <img src= "Products/<?php echo($productRow["pImageSrc"]); ?>" alt="">
+                    <div class="icons">
+                        <a href="#" class="fas fa-heart"></a> <a href="#" class="cart-btn">add to cart</a> <a href="#" class="fas fa-share"></a>
+                    </div>
+                </div>
+                <div class="content">
+                    <h3> <?php echo($productRow["pTitle"]); ?> </h3>
+                    <div class="price"> $<?php echo($productRow["pPrice"]); ?> <span> $<?php echo($productRow["pDiscountProduct"]); ?> </span></div>
+                </div>
+            </div>
+        <?php } } /* [ender] [ender] */ ?>
+        </div>
+
+        <!-- 分頁按鈕 -->
+        <div class="page-container">
+        <?php /* 分頁處理代碼塊 */
+        /* 是否有更多頁數 ( _NOW - 2 > 1 ) */
+        if (($GlobalValues_Page - 2) > 1) echo("<button class='more-button'>...</button>");
+        for ($tempPage = $GlobalValues_Page - 2; $tempPage <= $productTotalPage; $tempPage++) {
+            /* 如果頁數不合法 */
+            if ($tempPage < 1 || $tempPage > $productTotalPage) continue;
+            /* 如果是當前頁數 */
+            if ($tempPage == $GlobalValues_Page) {
+                echo("<button class='select-button'>$tempPage</button>");
+                continue;
+            } echo("<a href='index.php?page=$tempPage'><button class='noselect-button'>$tempPage</button></a>");
+        }
+        /* 是否有更多頁數 ( _NOW + 2 < _MAX ) */
+        if (($GlobalValues_Page + 2) < $productTotalPage) echo("<button class='more-button'>...</button>");
+        ?>
+        </div>
+    </section>
+
     <!-- 評論 -->
     <section class="review" id="review">
         <h1 class="heading">買家<span>評論</span> </h1>
         <!-- 評論方框 -->
         <div class="box-container">
-        <?php while ($commentRow = $commentResult->fetch_assoc()) {  /* 處理顯示隨機三條五星評論 */ ?>
+        <?php if ($commentResult->num_rows === 0) echo("<div class='nothing-box'><h3>暫時沒有更多的評論<h3></div>"); else { /* 如果沒有任何評論 [header] */ ?>
+        <?php while ($commentRow = $commentResult->fetch_assoc()) {  /* 處理顯示隨機三條五星評論 [header] */ ?>
             <div class="box">
                 <!-- 五星顯示 -->
                 <div class="stars">
@@ -123,18 +266,23 @@
                 </div>
                 <!-- 評論內容 -->
                 <p> <?php echo($commentRow["cMessage"]) ?> </p>
-                <!-- 評論庫戶資訊 -->
+                <!-- 評論客戶資訊 -->
                 <div class="account-box">
-                    <!-- 庫戶頭貼 -->
+                    <!-- 客戶頭貼 -->
                     <img src="images/pic-1.png" alt="">
-                    <!-- 庫戶資訊 -->
+                    <!-- 客戶資訊 -->
                     <div>
                         <h3> <?php echo($commentRow["cName"]) ?> </h3>
                         <span> <?php echo($commentRow["cTime"]) ?> </span>
                     </div>
                 </div>
             </div>
-        <?php } ?>
+        <?php } } /* [footer] [footer] */ ?>
         </div>
+    </section>
+
+    <section class="footer">
+        <!-- 聲明 -->
+        <div class="credit"> Create By <span> Mr. CatHouse </span> | All Rights Reserved </div>
     </section>
 </body>
