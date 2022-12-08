@@ -1,10 +1,16 @@
 <?php
 /* PHP 代碼塊 */
-require_once("./Utils/AccountInfoDataBaseConnect.php");
-require_once("./Utils/CommentsDataBaseConnect.php");
+require_once("./utils/AccountInfoDataBaseConnect.php");
+require_once("./utils/ProductsDataBaseConnect.php");
+require_once("./utils/CommentsDataBaseConnect.php");
 
 session_start();
 
+define("__PRODUCT_COUNT__", 5);
+
+$__NOW_PAGE = 1;
+
+/* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 // 處理帳戶資訊資料表
 $accounntInfoConnect = new AccountInfoDataBaseConnect();
 // 如果有 [SESSION_USER] 狀態
@@ -13,6 +19,17 @@ if (isset($_SESSION["SESSION_USER"])) {
     $accounntInfoConnect->addDefaultAccountInfo($_SESSION["SESSION_USER"]);
 }
 
+/* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
+// 處理商品資訊資料表
+$productsConnect = new ProductsDataBaseConnect();
+$productsAllResult = $productsConnect->getProducts(); // 所有商品
+$productsOfPageResult = $productsConnect->getProductsOfPage(); // 該頁數所顯示的商品
+// 處理商品頁數
+$productNeedPage = ceil($productsAllResult->num_rows / __PRODUCT_COUNT__);
+if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productNeedPage)
+    $__NOW_PAGE = $productNeedPage;
+
+/* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 // 處理評論資訊資料表
 $commentsConnect = new CommentsDataBaseConnect();
 // 如果有發表評論
@@ -135,6 +152,34 @@ $commentsResult = $commentsConnect->getRandComments();
             <div>
                 <h3>安全支付</h3><span>支持信用卡購買任何您想要的東西</span>
             </div>
+        </div>
+    </section>
+
+    <!-- 商品展示 -->
+    <section class="products" id="products">
+        <!-- 標題 -->
+        <h1 class="heading">所有<span>商品</span> </h1>
+        <!-- 商品內容框 -->
+        <div class="box-container">
+        </div>
+
+        <!-- 分頁按鈕 -->
+        <div class="page-container">
+            <?php
+            if (($__NOW_PAGE - 2) > 1)
+                echo ("<button class='more-button'>...</button>");
+            for ($tempPage = $__NOW_PAGE - 2; $tempPage <= $productNeedPage; $tempPage++) {
+                if ($tempPage < 1 || $tempPage > $productNeedPage)
+                    continue;
+                if ($tempPage == $__NOW_PAGE) {
+                    echo ("<button class='select-button'>$tempPage</button>");
+                    continue;
+                }
+                echo ("<a href='index.php?page=$tempPage'><button class='noselect-button'>$tempPage</button></a>");
+            }
+            if (($__NOW_PAGE + 2) < $productNeedPage)
+                echo ("<button class='more-button'>...</button>");
+            ?>
         </div>
     </section>
 

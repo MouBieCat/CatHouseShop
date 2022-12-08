@@ -1,6 +1,6 @@
 <?php
 /* PHP 代碼塊 */
-require_once("./Utils/LoginDataBaseConnect.php");
+require_once("./utils/LoginDataBaseConnect.php");
 $connection = new LoginDataBaseConnect();
 
 session_start();

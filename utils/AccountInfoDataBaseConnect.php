@@ -23,6 +23,9 @@
  */
 require_once("AccountsDataBaseConnect.php");
 
+/**
+ * 有關帳戶資訊資料庫操作類
+ */
 final class AccountInfoDataBaseConnect extends DataBaseConnect
 {
     /**
