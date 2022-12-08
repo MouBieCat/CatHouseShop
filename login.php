@@ -46,11 +46,11 @@ if (isset($_POST["UserNameTextBox"]) && isset($_POST["UserPasswordTextBox"])) {
         <!-- 接收登入結果訊息 -->
         <?php if (isset($_GET["error"])) {
             $message = $_GET["error"];
-            echo ("<div class='error-messagebox'><h3>$message</h3></div>");
+            echo ("<div class='messagebox'><h3>$message</h3></div>");
         } ?>
 
         <!-- 表單 -->
-        <form method="POST" action="Login.php">
+        <form method="POST" action="login.php">
             <!-- 帳戶名稱輸入框 -->
             <div class="field">
                 <input type="test" name="UserNameTextBox" title="帳戶名稱" required>

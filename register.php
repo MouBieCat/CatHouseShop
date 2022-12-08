@@ -45,7 +45,7 @@ if (isset($_POST["UserNameTextBox"]) && isset($_POST["UserPasswordTextBox"])) {
         <!-- 接收登入結果訊息 -->
         <?php if (isset($_GET["error"])) {
             $message = $_GET["error"];
-            echo ("<div class='error-messagebox'><h3>$message</h3></div>");
+            echo ("<div class='messagebox'><h3>$message</h3></div>");
         } ?>
 
         <!-- 表單 -->

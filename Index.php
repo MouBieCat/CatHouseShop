@@ -3,11 +3,6 @@
 require_once("./utils/AccountInfoDataBaseConnect.php");
 require_once("./utils/ProductsDataBaseConnect.php");
 require_once("./utils/CommentsDataBaseConnect.php");
-
-session_start();
-
-define("__INDEX_PRODUCT_COUNT__", 5);
-$__NOW_PAGE = 1;
 ?>
 
 <!-- 主網頁 -->
