@@ -72,8 +72,8 @@ final class RegisterDataBaseConnect extends AccountsDataBaseConnect
             $returnResult[__REGISTER_RESULT__] = TRUE;
             return $returnResult;
         }
-        
-        // // 如果資料插入失敗
+
+        // 如果資料插入失敗
         $returnResult[__REGISTER_CONTENT__] = "該帳戶名稱已經被使用。";
         return $returnResult;
     }
