@@ -71,7 +71,7 @@ final class ProductsDataBaseConnect extends DataBaseConnect
         if ($_Page < 1)
             $_Page = 1;
         $startProductIndex = ($_Page - 1) * $_Count;
-        $selectProductOfPageCommand = "SELECT * FROM Products LIMIT $startProductIndex, $_Count;";
+        $selectProductOfPageCommand = "SELECT * FROM Product LIMIT $startProductIndex, $_Count;";
         return $this->m_ConnectObject->query($selectProductOfPageCommand);
     }
 }
