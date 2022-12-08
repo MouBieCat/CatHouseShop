@@ -6,8 +6,8 @@
  *   uUUID varchar(36) PRIMARY KEY NOT NULL, 
  *   uEmail varchar(64), 
  *   uPhone varchar(15), 
- *   uAlias varchar(16) NOT NULL DEFAULT "會員帳戶"
- *   uImageSrc varchar(32) NOT NULL DEFAULT "./Accounts/DefaultUserImage.jpg"
+ *   uAlias varchar(16) NOT NULL DEFAULT "會員帳戶",
+ *   uImageSrc varchar(32) NOT NULL DEFAULT "./Resource/DefaultUserImage.jpg"
  * );
  * 
  * DESCRIBE AccountInfo;
@@ -18,7 +18,7 @@
  * | uEmail    | varchar(64) | YES  |     | NULL                            |       |
  * | uPhone    | varchar(15) | YES  |     | NULL                            |       |
  * | uAlias    | varchar(16) | NO   |     | 會員帳戶                         |       |
- * | uImageSrc | varchar(32) | NO   |     | ./Accounts/DefaultUserImage.jpg |       |
+ * | uImageSrc | varchar(32) | NO   |     | ./Resource/DefaultUserImage.jpg |       |
  * +-----------+-------------+------+-----+---------------------------------+-------+
  */
 require_once("AccountsDataBaseConnect.php");
