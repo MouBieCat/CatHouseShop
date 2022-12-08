@@ -1,7 +1,7 @@
 <?php
 /* PHP 代碼塊 */
-require_once("./utils/AccountInfoDataBaseConnect.php");
-require_once("./utils/CommentsDataBaseConnect.php");
+require_once("./Utils/AccountInfoDataBaseConnect.php");
+require_once("./Utils/CommentsDataBaseConnect.php");
 
 session_start();
 
