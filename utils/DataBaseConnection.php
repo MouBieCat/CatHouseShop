@@ -18,7 +18,7 @@ interface IConnect
 }
 
 /**
- * 代表一個數據庫連接類
+ * 代表一個資料庫連接類
  */
 class DataBaseConnect implements IConnect
 {

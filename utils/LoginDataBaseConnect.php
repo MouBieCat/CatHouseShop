@@ -21,15 +21,15 @@
  * | uRegistrationTime | varchar(20) | NO   |     | NULL    |       |
  * +-------------------+-------------+------+-----+---------+-------+
  */
-include "DataBaseConnection.php";
+require_once("AccountsDataBaseConnect.php");
 
-define("__RESULT__", "__RETURN__RESULT__");
-define("__CONTENT__", "__RETURN__CONTENT__");
+define("__LOGIN_RESULT__", "__RESULT__");
+define("__LOGIN_CONTENT__", "__CONTENT__");
 
 /**
  * 用於登入處理的資料庫類
  */
-final class LoginDataBaseConnect extends DataBaseConnect
+final class LoginDataBaseConnect extends AccountsDataBaseConnect
 {
     /**
      * 建構子
@@ -47,35 +47,34 @@ final class LoginDataBaseConnect extends DataBaseConnect
      */
     public function tryLogin(string $_Name, string $_Passwd): array
     {
-        $returnResult[__RESULT__] = FALSE;
-        $returnResult[__CONTENT__] = NULL;
+        $returnResult[__LOGIN_RESULT__] = FALSE;
+        $returnResult[__LOGIN_CONTENT__] = NULL;
 
         // 檢查是否為空值
         if (empty($_Name) || empty($_Passwd)) {
-            $returnResult[__CONTENT__] = "帳戶名稱或是密碼欄位不可為空。";
+            $returnResult[__LOGIN_CONTENT__] = "帳戶名稱或是密碼欄位不可為空。";
             return $returnResult;
         }
 
         // 根據名稱與密碼取出對應的資料
-        $selectAccountCommand = "SELECT uName, uPasswd, uUUID FROM Accounts WHERE uName='$_Name';";
-        $selectAccountResult = $this->m_ConnectObject->query($selectAccountCommand);
+        $selectAccountResult = $this->getAccount($_Name);
 
-        // 判斷是否有任何的數據
+        // 判斷是否有任何的資料
         if ($selectAccountResult->num_rows === 0) {
-            $returnResult[__CONTENT__] = "帳戶名稱還沒有被註冊，請問是我們的新朋友嗎？";
+            $returnResult[__LOGIN_CONTENT__] = "帳戶名稱還沒有被註冊，請問是我們的新朋友嗎？";
             return $returnResult;
         }
 
         // 處理資料並判斷帳戶密碼
         $accountRow = $selectAccountResult->fetch_assoc();
         if ($_Name === $accountRow["uName"] && $_Passwd === $accountRow["uPasswd"]) {
-            $returnResult[__RESULT__] = TRUE;
-            $returnResult[__CONTENT__] = $accountRow["uUUID"];
+            $returnResult[__LOGIN_RESULT__] = TRUE;
+            $returnResult[__LOGIN_CONTENT__] = $accountRow["uUUID"];
             return $returnResult;
         }
 
         // 如果驗證帳戶失敗
-        $returnResult[__CONTENT__] = "帳戶名稱或密碼輸入錯誤。";
+        $returnResult[__LOGIN_CONTENT__] = "帳戶名稱或密碼輸入錯誤。";
         return $returnResult;
     }
 }

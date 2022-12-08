@@ -1,6 +1,6 @@
 <?php
 /* PHP 代碼塊 */
-include("./utils/LoginDataBaseConnect.php");
+require_once("./utils/LoginDataBaseConnect.php");
 $connection = new LoginDataBaseConnect();
 
 session_start();
@@ -10,14 +10,14 @@ if (isset($_POST["UserNameTextBox"]) && isset($_POST["UserPasswordTextBox"])) {
     $resultArray = $connection->tryLogin($_POST["UserNameTextBox"], $_POST["UserPasswordTextBox"]);
 
     // 判斷登入結果陣列結構
-    if ($resultArray[__RESULT__] === TRUE) {
-        $_SESSION["SESSION_USER"] = $resultArray[__CONTENT__];
+    if ($resultArray[__LOGIN_RESULT__] === TRUE) {
+        $_SESSION["SESSION_USER"] = $resultArray[__LOGIN_CONTENT__];
         header("Location: index.php");
         return;
     }
 
     // 對登入網頁顯示錯誤訊息框
-    $resultContent = $resultArray[__CONTENT__];
+    $resultContent = $resultArray[__LOGIN_CONTENT__];
     header("Location: login.php?error=$resultContent");
 }
 ?>
