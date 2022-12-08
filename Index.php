@@ -7,9 +7,7 @@ require_once("./utils/CommentsDataBaseConnect.php");
 session_start();
 
 define("__PRODUCT_COUNT__", 5);
-
 $__NOW_PAGE = 1;
-
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 // 處理帳戶資訊資料表
 $accounntInfoConnect = new AccountInfoDataBaseConnect();
@@ -18,7 +16,6 @@ if (isset($_SESSION["SESSION_USER"])) {
     var_dump($_SESSION["SESSION_USER"]);
     $accounntInfoConnect->addDefaultAccountInfo($_SESSION["SESSION_USER"]);
 }
-
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 // 處理商品資訊資料表
 $productsConnect = new ProductsDataBaseConnect();
@@ -28,7 +25,6 @@ $productsOfPageResult = $productsConnect->getProductsOfPage(); // 該頁數所�
 $productNeedPage = ceil($productsAllResult->num_rows / __PRODUCT_COUNT__);
 if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productNeedPage)
     $__NOW_PAGE = $productNeedPage;
-
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 // 處理評論資訊資料表
 $commentsConnect = new CommentsDataBaseConnect();
