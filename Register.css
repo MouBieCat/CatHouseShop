@@ -5,7 +5,7 @@
 
 body {
     overflow: hidden;
-    background: linear-gradient(120deg,#2980b9, #8122aa);
+    background: linear-gradient(120deg, #2980b9, #8122aa);
 }
 
 .container {
@@ -45,7 +45,7 @@ form .field {
     outline: none;
     text-align: center;
 }
-  
+
 .field label {
     position: absolute;
     top: 50%;
@@ -57,12 +57,12 @@ form .field {
     transition: .5s;
 }
 
-.field input:focus ~ label,
-.field input:valid ~ label {
+.field input:focus~label,
+.field input:valid~label {
     top: -10px;
     color: #2691d9;
 }
-  
+
 .field span::before {
     content: "";
     position: absolute;
@@ -74,8 +74,8 @@ form .field {
     transition: .5s;
 }
 
-.field input:focus ~ span::before,
-.field input:valid ~ span::before {
+.field input:focus~span::before,
+.field input:valid~span::before {
     width: 100%;
 }
 
