@@ -2,24 +2,24 @@
 /**
  * 相關數據表結構：
  * 
- * 資料庫 Accounts 表資訊
+ * 資料庫 Account 表資訊
  * 
- * CREATE TABLE Accounts(
- *   uName             varchar(16) PRIMARY KEY NOT NULL, 
- *   uPasswd           varchar(32)             NOT NULL, 
- *   uUUID             varchar(36)             NOT NULL, 
- *   uRegistrationTime varchar(20)             NOT NULL
+ * CREATE TABLE Account(
+ *  uName varchar(16) PRIMARY KEY NOT NULL, 
+ *  uPasswd varchar(32) NOT NULL, 
+ *  uUUID varchar(36) NOT NULL,
+ *  uTime varchar(20) NOT NULL
  * );
  * 
- * DESCRIBE Accounts;
- * +-------------------+-------------+------+-----+---------+-------+
- * | Field             | Type        | Null | Key | Default | Extra |
- * +-------------------+-------------+------+-----+---------+-------+
- * | uName             | varchar(16) | NO   | PRI | NULL    |       |
- * | uPasswd           | varchar(32) | NO   |     | NULL    |       |
- * | uUUID             | varchar(36) | NO   |     | NULL    |       |
- * | uRegistrationTime | varchar(20) | NO   |     | NULL    |       |
- * +-------------------+-------------+------+-----+---------+-------+
+ * DESCRIBE Account;
+ * +---------+-------------+------+-----+---------+-------+
+ * | Field   | Type        | Null | Key | Default | Extra |
+ * +---------+-------------+------+-----+---------+-------+
+ * | uName   | varchar(16) | NO   | PRI | NULL    |       |
+ * | uPasswd | varchar(32) | NO   |     | NULL    |       |
+ * | uUUID   | varchar(36) | NO   |     | NULL    |       |
+ * | uTime   | varchar(20) | NO   |     | NULL    |       |
+ * +---------+-------------+------+-----+---------+-------+
  */
 require_once("AccountsDataBaseConnect.php");
 
@@ -47,35 +47,33 @@ final class LoginDataBaseConnect extends AccountsDataBaseConnect
      */
     public function tryLogin(string $_Name, string $_Passwd): array
     {
-        $returnResult[__LOGIN_RESULT__] = FALSE;
-        $returnResult[__LOGIN_CONTENT__] = NULL;
+        $returnArray[__LOGIN_RESULT__] = FALSE;
+        $returnArray[__REGISTER_CONTENT__] = NULL;
 
-        // 檢查是否為空值
+        // 檢查是否為有效數據
         if (empty($_Name) || empty($_Passwd)) {
-            $returnResult[__LOGIN_CONTENT__] = "帳戶名稱或是密碼欄位不可為空。";
-            return $returnResult;
+            $returnArray[__REGISTER_CONTENT__] = "帳戶名稱或是密碼欄位不可為空。";
+            return $returnArray;
         }
 
-        // 根據名稱與密碼取出對應的資料
+        // 從資料庫取出相應資料
         $selectAccountResult = $this->getAccount($_Name);
-
-        // 判斷是否有任何的資料
         if ($selectAccountResult->num_rows === 0) {
-            $returnResult[__LOGIN_CONTENT__] = "帳戶名稱還沒有被註冊，請問是我們的新朋友嗎？";
-            return $returnResult;
+            $returnArray[__LOGIN_CONTENT__] = "帳戶名稱還沒有被註冊，請問是我們的新朋友嗎？";
+            return $returnArray;
         }
 
-        // 處理資料並判斷帳戶密碼
-        $accountRow = $selectAccountResult->fetch_assoc();
-        if ($_Name === $accountRow["uName"] && $_Passwd === $accountRow["uPasswd"]) {
-            $returnResult[__LOGIN_RESULT__] = TRUE;
-            $returnResult[__LOGIN_CONTENT__] = $accountRow["uUUID"];
-            return $returnResult;
+        // 處理資料並核對資料是否正確
+        $selectAccountRow = $selectAccountResult->fetch_assoc();
+        if ($_Name === $selectAccountRow[__ACCOUNT_NAME__] && $_Passwd === $selectAccountRow[__ACCOUNT_PASSWD__]) {
+            $returnArray[__LOGIN_RESULT__] = TRUE;
+            $returnArray[__LOGIN_CONTENT__] = $selectAccountRow[__ACCOUNT_UUID__];
+            return $returnArray;
         }
 
-        // 如果驗證帳戶失敗
-        $returnResult[__LOGIN_CONTENT__] = "帳戶名稱或密碼輸入錯誤。";
-        return $returnResult;
+        // 如果資料核對有錯誤
+        $returnArray[__LOGIN_CONTENT__] = "帳戶名稱或密碼輸入錯誤。";
+        return $returnArray;
     }
 }
 ?>
