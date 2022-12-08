@@ -54,7 +54,8 @@ final class CommentsDataBaseConnect extends DataBaseConnect
      */
     public function getRandComments(int $_Stars = 5, int $_Counts = 3): mysqli_result
     {
-        $selectCommentsCommand = "SELECT * FROM Comments WHERE cStar=$_Stars ORDER BY rand() LIMIT $_Counts;";
+        $selectCommentsCommand = "SELECT * FROM Comments WHERE cStars=$_Stars ORDER BY rand() LIMIT $_Counts;";
+        var_dump($selectCommentsCommand);
         return $this->m_ConnectObject->query($selectCommentsCommand);
     }
 

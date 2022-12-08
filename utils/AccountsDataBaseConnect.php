@@ -93,11 +93,11 @@ class AccountsDataBaseConnect extends DataBaseConnect
     }
 
     /**
-     * 根據該標識碼獲取帳戶
+     * 該標識碼是否已經被帳戶生成
      * @param string $_UUID 標識碼
      * @return bool
      */
-    public function isGeneratedOfUUID(string $_UUID): bool
+    public function isGeneratedUUID(string $_UUID): bool
     {
         $selectUUIDResult = $this->getAccountOfUUID($_UUID);
         return ($selectUUIDResult->num_rows !== 0);

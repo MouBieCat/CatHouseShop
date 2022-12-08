@@ -55,11 +55,11 @@ final class AccountInfoDataBaseConnect extends DataBaseConnect
         if ($_CheckUUID === TRUE) {
             $accountConnect = new AccountsDataBaseConnect();
             // 判斷該UUID是否已經被帳戶生成
-            if (!$accountConnect->isGeneratedOfUUID($_UUID))
+            if (!$accountConnect->isGeneratedUUID($_UUID))
                 return;
         }
 
-        $insertAccountInfoCommand = "INSERT INTO AccountInfo(uUUID) VALUES (uUUID='$_UUID');";
+        $insertAccountInfoCommand = "INSERT INTO AccountInfo(uUUID) VALUES ('$_UUID');";
         $this->m_ConnectObject->query($insertAccountInfoCommand);
     }
 }
