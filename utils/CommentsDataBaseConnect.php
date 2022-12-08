@@ -55,7 +55,6 @@ final class CommentsDataBaseConnect extends DataBaseConnect
     public function getRandComments(int $_Stars = 5, int $_Counts = 3): mysqli_result
     {
         $selectCommentsCommand = "SELECT * FROM Comments WHERE cStars=$_Stars ORDER BY rand() LIMIT $_Counts;";
-        var_dump($selectCommentsCommand);
         return $this->m_ConnectObject->query($selectCommentsCommand);
     }
 
@@ -85,7 +84,7 @@ final class CommentsDataBaseConnect extends DataBaseConnect
         if (strlen($_Message) > 200 || strlen($_Message) < 10)
             return "評論訊息過短或過長。";
 
-        $insertCommentCommand = "INSERT INTO Comments(uUUID, cStar, cMessage, cTime) VALUES ('$_UUID', $_Stars, '$_Message', now())";
+        $insertCommentCommand = "INSERT INTO Comments(uUUID, cStars, cMessage, cTime) VALUES ('$_UUID', $_Stars, '$_Message', now())";
         $insertCommentResult = $this->m_ConnectObject->query($insertCommentCommand);
         // 判斷資料是否插入成功
         if ($insertCommentResult)

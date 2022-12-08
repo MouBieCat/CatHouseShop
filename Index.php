@@ -15,8 +15,14 @@ if (isset($_SESSION["SESSION_USER"])) {
 
 // 處理評論資訊資料表
 $commentsConnect = new CommentsDataBaseConnect();
-// 如果有發表評論 & 有登入
-if (isset($_POST["comment"]) && isset($_POST["message"]) && isset($_SESSION["SESSION_USER"])) {
+// 如果有發表評論
+if (isset($_POST["comment"]) && isset($_POST["message"])) {
+    // 是否已經登入
+    if (!isset($_SESSION["SESSION_USER"])) {
+        header("Location: login.php");
+        return;
+    }
+
     $sendCommentResult = $commentsConnect->addComment($_SESSION["SESSION_USER"], 5, $_POST["message"]);
     header("Location: index.php?comment=$sendCommentResult");
     return;
@@ -129,6 +135,66 @@ $commentsResult = $commentsConnect->getRandComments();
             <div>
                 <h3>安全支付</h3><span>支持信用卡購買任何您想要的東西</span>
             </div>
+        </div>
+    </section>
+
+    <!-- 評論區 -->
+    <section class="comments-container" id="comments">
+        <!-- 標題 -->
+        <h1 class="heading">五星<span>評論</span> </h1>
+
+        <!-- 評論顯示框 -->
+        <div class="comments-box">
+        <?php
+        while ($commentRow = $commentsResult->fetch_assoc()) { /* 顯示評論內容並顯示 [WHILE-HEAD] */
+            $commentAccountInfoResult = $accounntInfoConnect->getAccountInfo($commentRow["uUUID"]);
+            $commentAccountInfoRow = $commentAccountInfoResult->fetch_assoc();
+        ?>
+            <!-- 評論卡 -->
+            <div class="comment">
+                <!-- 星星數 -->
+                <div class="stars">
+                    <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                </div>
+                <!-- 內容 -->
+                <p> <?php echo($commentRow["cMessage"]); ?> </p>
+                <!-- 發表者資訊 -->
+                <div class="user">
+                    <img src= <?php echo($commentAccountInfoRow["uImageSrc"]); ?> alt="">
+                    <div class="user-info">
+                        <h3> <?php echo($commentAccountInfoRow["uAlias"]); ?> </h3>
+                        <span>發表時間： <?php echo($commentRow["cTime"]); ?> </span>
+                    </div>
+                </div>
+                <span class="fas fa-quote-right"></span>
+            </div>
+        <?php } /* [WHILE-END] */ ?>
+        </div>
+
+        <!-- 發表評論 -->
+        <div class="comment-row">
+            <div class="comment-box">
+                <!-- 接收發送評論結果 -->
+                <?php if (isset($_GET["comment"])) {
+                    $message = $_GET["comment"];
+                    echo ("<div class='comment-messagebox'><h3>$message</h3></div>");
+                } ?>
+
+                <!-- 評論須知 -->
+                <p>尊重每一個人。 絕對不容忍騷擾、政治迫害、性別歧視、種族主義或仇恨言論。</p>
+                <p>Treat everyone with respect. Absolutely no harassment, witch hunting, sexism, racism, or hate speech
+                    will be tolerated.</p>
+
+                <!-- 表單 -->
+                <form method="POST" action="index.php">
+                    <textarea rows="10" name="message" maxlength="200" placeholder="請在這裡輸入您寶貴的想法！"
+                        class="field"></textarea>
+                    <input type="submit" name="comment" value="發表評論" class="btn">
+                </form>
+            </div>
+
+            <!-- 圖示 -->
+            <div class="image"> <img src="./Resource/Index-SendComment.svg" alt=""> </div>
         </div>
     </section>
 
