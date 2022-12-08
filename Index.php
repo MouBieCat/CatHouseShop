@@ -90,7 +90,7 @@ $commentsResult = $commentsConnect->getRandComments();
         <div class="row">
             <!-- 影片 -->
             <div class="video-container">
-                <video src="./Resource/Index-AboutVideo.mp4" loop autoplay muted></video>
+                <video src="./resource/Index-AboutVideo.mp4" loop autoplay muted></video>
                 <h3>最 佳 的 花 店 鋪</h3>
             </div>
 
@@ -107,7 +107,7 @@ $commentsResult = $commentsConnect->getRandComments();
     <section class="icons-container">
         <!-- 特徵卡 -->
         <div class="icons">
-            <img src="./Resource/Index-Icon1.png" alt="">
+            <img src="./resource/Index-Icon1.png" alt="">
             <div>
                 <h3>免運費</h3> <span>在所有訂單上不收取運費</span>
             </div>
@@ -115,7 +115,7 @@ $commentsResult = $commentsConnect->getRandComments();
 
         <!-- 特徵卡 -->
         <div class="icons">
-            <img src="./Resource/Index-Icon2.png" alt="">
+            <img src="./resource/Index-Icon2.png" alt="">
             <div>
                 <h3>退款保證</h3> <span>我們保證在出貨七天後退款</span>
             </div>
@@ -123,7 +123,7 @@ $commentsResult = $commentsConnect->getRandComments();
 
         <!-- 特徵卡 -->
         <div class="icons">
-            <img src="./Resource/Index-Icon3.png" alt="">
+            <img src="./resource/Index-Icon3.png" alt="">
             <div>
                 <h3>優惠及禮品</h3> <span>註冊我們的會員可享有會員優惠及禮物</span>
             </div>
@@ -131,7 +131,7 @@ $commentsResult = $commentsConnect->getRandComments();
 
         <!-- 特徵卡 -->
         <div class="icons">
-            <img src="./Resource/Index-Icon4.png" alt="">
+            <img src="./resource/Index-Icon4.png" alt="">
             <div>
                 <h3>安全支付</h3><span>支持信用卡購買任何您想要的東西</span>
             </div>
@@ -145,34 +145,41 @@ $commentsResult = $commentsConnect->getRandComments();
 
         <!-- 評論顯示框 -->
         <div class="comments-box">
-        <?php
-        while ($commentRow = $commentsResult->fetch_assoc()) { /* 顯示評論內容並顯示 [WHILE-HEAD] */
-            $commentAccountInfoResult = $accounntInfoConnect->getAccountInfo($commentRow["uUUID"]);
-            $commentAccountInfoRow = $commentAccountInfoResult->fetch_assoc();
-        ?>
+            <?php
+            while ($commentRow = $commentsResult->fetch_assoc()) { /* 顯示評論內容並顯示 [WHILE-HEAD] */
+                $commentAccountInfoResult = $accounntInfoConnect->getAccountInfo($commentRow["uUUID"]);
+                $commentAccountInfoRow = $commentAccountInfoResult->fetch_assoc();
+            ?>
             <!-- 評論卡 -->
-            <div class="comment">
+            <div class="comment-card">
                 <!-- 星星數 -->
                 <div class="stars">
-                    <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i
+                        class="fas fa-star"></i> <i class="fas fa-star"></i>
                 </div>
                 <!-- 內容 -->
-                <p> <?php echo($commentRow["cMessage"]); ?> </p>
+                <p>
+                    <?php echo ($commentRow["cMessage"]); ?>
+                </p>
                 <!-- 發表者資訊 -->
                 <div class="user">
-                    <img src= <?php echo($commentAccountInfoRow["uImageSrc"]); ?> alt="">
+                    <img src=<?php echo ($commentAccountInfoRow["uImageSrc"]); ?> alt="">
                     <div class="user-info">
-                        <h3> <?php echo($commentAccountInfoRow["uAlias"]); ?> </h3>
-                        <span>發表時間： <?php echo($commentRow["cTime"]); ?> </span>
+                        <h3>
+                            <?php echo ($commentAccountInfoRow["uAlias"]); ?>
+                        </h3>
+                        <span>發表時間：
+                            <?php echo ($commentRow["cTime"]); ?>
+                        </span>
                     </div>
                 </div>
                 <span class="fas fa-quote-right"></span>
             </div>
-        <?php } /* [WHILE-END] */ ?>
+            <?php } /* [WHILE-END] */?>
         </div>
 
         <!-- 發表評論 -->
-        <div class="comment-row">
+        <div class="row">
             <div class="comment-box">
                 <!-- 接收發送評論結果 -->
                 <?php if (isset($_GET["comment"])) {
@@ -194,7 +201,7 @@ $commentsResult = $commentsConnect->getRandComments();
             </div>
 
             <!-- 圖示 -->
-            <div class="image"> <img src="./Resource/Index-SendComment.svg" alt=""> </div>
+            <div class="image"> <img src="./resource/Index-SendComment.svg" alt=""> </div>
         </div>
     </section>
 

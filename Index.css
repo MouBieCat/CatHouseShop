@@ -215,7 +215,7 @@ header .fa-bars {
     gap:1.5rem;
 }
 
-.comments-container .comments-box .comment {
+.comments-container .comments-box .comment-card {
     flex:1 1 30rem;
     box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.1);
     border-radius: .5rem;
@@ -231,25 +231,25 @@ header .fa-bars {
     color:#eee;
 }
 
-.comments-container .comments-box .comment .stars i {
+.comments-container .comments-box .comment-card .stars i {
     color:var(--pink);
     font-size: 2rem;
 }
 
-.comments-container .comments-box .comment p {
+.comments-container .comments-box .comment-card p {
     color:#999;
     font-size: 1.5rem;
     line-height: 1.5;
     padding-top: 2rem;
 }
 
-.comments-container .comments-box .comment .user {
+.comments-container .comments-box .comment-card .user {
     display: flex;
     align-items: center;
     padding-top: 2rem;
 }
 
-.comments-container .comments-box .comment .user img {
+.comments-container .comments-box .comment-card .user img {
     height:6rem;
     width:6rem;
     border-radius: 50%;
@@ -257,17 +257,17 @@ header .fa-bars {
     margin-right: 1rem;
 }
 
-.comments-container .comments-box .comment .user h3 {
+.comments-container .comments-box .comment-card .user h3 {
     font-size: 2rem;
     color:#333;
 }
 
-.comments-container .comments-box .comment .user span {
+.comments-container .comments-box .comment-card .user span {
     font-size: 1.5rem;
     color:#999;
 }
 
-.comments-container .comment-row {
+.comments-container .row {
     display: flex;
     flex-wrap: wrap-reverse;
     gap:1.5rem;
@@ -276,11 +276,11 @@ header .fa-bars {
     margin-top: 20px;
 }
 
-.comments-container .comment-row .image {
+.comments-container .row .image {
     flex:1 1 40rem;
 }
 
-.comments-container .comment-row .image img {
+.comments-container .row .image img {
     width: 100%;
 }
 
@@ -297,7 +297,7 @@ header .fa-bars {
     margin-bottom: 20px;
 }
 
-.comments-container .comment-row .comment-box form {
+.comments-container .row .comment-box form {
     flex:1 1 40rem;
     padding:2rem 2.5rem;
     box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.1);
@@ -306,7 +306,7 @@ header .fa-bars {
     border-radius: .5rem;
 }
 
-.comments-container .comment-row .comment-box form .field {
+.comments-container .row .comment-box form .field {
     padding: 1rem;
     font-size: 1.7rem;
     color:#333;
@@ -318,11 +318,11 @@ header .fa-bars {
     resize: none;
 }
 
-.comments-container .comment-row .comment-box form .field:focus {
+.comments-container .row .comment-box form .field:focus {
     border-color: var(--pink);
 }
 
-.comments-container .comment-row .comment-box form .btn {
+.comments-container .row .comment-box form .btn {
     padding:1rem;
     font-size: 1.7rem;
     color:#333;
@@ -334,7 +334,7 @@ header .fa-bars {
     cursor: pointer;
 }
 
-.comments-container .comment-row .comment-box form .btn:hover {
+.comments-container .row .comment-box form .btn:hover {
     background:var(--pink);
 }
 
