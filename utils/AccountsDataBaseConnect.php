@@ -49,7 +49,7 @@ class AccountsDataBaseConnect extends DataBaseConnect
      */
     protected function addAccount(string $_Name, string $_Password)
     {
-        $insertAccountCommand = "INSERT INTO Account (" . __ACCOUNT_NAME__ . ", " . __ACCOUNT_PASSWD__ . ", " . __ACCOUNT_UUID__ . ", " . __ACCOUNT_TIME__ . ") VALUES ('$_Name', '$_Password', uuid(), now())";
+        $insertAccountCommand = "INSERT INTO Account (" . __ACCOUNT_NAME__ . ", " . __ACCOUNT_PASSWD__ . ", " . __ACCOUNT_UUID__ . ", " . __ACCOUNT_TIME__ . ") VALUES ('$_Name', '$_Password', uuid(), now());";
         return $this->m_ConnectObject->query($insertAccountCommand);
     }
 
@@ -85,7 +85,7 @@ class AccountsDataBaseConnect extends DataBaseConnect
         $selectAccountResult = $this->getAccountOfUUID($_UUID);
         return ($selectAccountResult->num_rows !== 0);
     }
-    
+
     /**
      * 根據該標識碼獲取帳戶
      * @param string $_UUID 標識碼
@@ -94,7 +94,7 @@ class AccountsDataBaseConnect extends DataBaseConnect
     public function getAccountOfUUID(string $_UUID): mysqli_result
     {
         $selectAccountCommand = "SELECT * FROM Account WHERE " . __ACCOUNT_UUID__ . "='$_UUID';";
-        return $this->m_ConnectObject->query($selectAccountCommand); 
+        return $this->m_ConnectObject->query($selectAccountCommand);
     }
 }
 ?>
