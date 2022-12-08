@@ -53,7 +53,7 @@ final class AccountInfoDataBaseConnect extends DataBaseConnect
 
     /**
      * 獲取指定帳戶資訊資料
-     * @param string $_UUID
+     * @param string $_UUID 標識碼
      * @return mysqli_result
      */
     public function getAccountInfo(string $_UUID): mysqli_result
@@ -80,7 +80,7 @@ final class AccountInfoDataBaseConnect extends DataBaseConnect
      */
     public function removeAccountInfo(string $_UUID): void
     {
-        $deleteAccountInfoCommand = "DELETE FROM AccountInfo (" . __ACCOUNTINFO_UUID__ . "='$_UUID';";
+        $deleteAccountInfoCommand = "DELETE FROM AccountInfo WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($deleteAccountInfoCommand);
     }
 }

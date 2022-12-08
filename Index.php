@@ -41,7 +41,7 @@ if (isset($_POST["comment"]) && isset($_POST["message"])) {
     return;
 }
 // 處理隨機評論
-$commentsResult = $commentsConnect->getRandComments();
+$commentsResult = $commentsConnect->getRnadComments();
 ?>
 
 <!-- 主網頁 -->
