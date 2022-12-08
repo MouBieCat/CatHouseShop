@@ -10,38 +10,37 @@ define("__PRODUCT_COUNT__", 5);
 $__NOW_PAGE = 1;
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 // 處理帳戶資訊資料表
-$accounntInfoConnect = new AccountInfoDataBaseConnect();
-// 如果有 [SESSION_USER] 狀態
-if (isset($_SESSION["SESSION_USER"])) {
-    var_dump($_SESSION["SESSION_USER"]);
-    $accounntInfoConnect->addDefaultAccountInfo($_SESSION["SESSION_USER"]);
-}
+// $accounntInfoConnect = new AccountInfoDataBaseConnect();
+// // 如果有 [SESSION_USER] 狀態
+// if (isset($_SESSION["SESSION_USER"])) {
+//     $accounntInfoConnect->addAccountInfo($_SESSION["SESSION_USER"]);
+// }
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 // 處理商品資訊資料表
-$productsConnect = new ProductsDataBaseConnect();
-$productsAllResult = $productsConnect->getProducts(); // 所有商品
-$productsOfPageResult = $productsConnect->getProductsOfPage(); // 該頁數所顯示的商品
-// 處理商品頁數
-$productNeedPage = ceil($productsAllResult->num_rows / __PRODUCT_COUNT__);
-if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productNeedPage)
-    $__NOW_PAGE = $productNeedPage;
+// $productsConnect = new ProductsDataBaseConnect();
+// $productsAllResult = $productsConnect->getProducts(); // 所有商品
+// $productsOfPageResult = $productsConnect->getProductsOfPage(); // 該頁數所顯示的商品
+// // 處理商品頁數
+// $productNeedPage = ceil($productsAllResult->num_rows / __PRODUCT_COUNT__);
+// if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productNeedPage)
+//     $__NOW_PAGE = $productNeedPage;
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 // 處理評論資訊資料表
-$commentsConnect = new CommentsDataBaseConnect();
-// 如果有發表評論
-if (isset($_POST["comment"]) && isset($_POST["message"])) {
-    // 是否已經登入
-    if (!isset($_SESSION["SESSION_USER"])) {
-        header("Location: login.php");
-        return;
-    }
+// $commentsConnect = new CommentsDataBaseConnect();
+// // 如果有發表評論
+// if (isset($_POST["comment"]) && isset($_POST["message"])) {
+//     // 是否已經登入
+//     if (!isset($_SESSION["SESSION_USER"])) {
+//         header("Location: login.php");
+//         return;
+//     }
 
-    $sendCommentResult = $commentsConnect->addComment($_SESSION["SESSION_USER"], 5, $_POST["message"]);
-    header("Location: index.php?comment=$sendCommentResult");
-    return;
-}
-// 處理隨機評論
-$commentsResult = $commentsConnect->getRnadComments();
+//     $sendCommentResult = $commentsConnect->addComment($_SESSION["SESSION_USER"], 5, $_POST["message"]);
+//     header("Location: index.php?comment=$sendCommentResult");
+//     return;
+// }
+// // 處理隨機評論
+// $commentsResult = $commentsConnect->getRnadComments();
 ?>
 
 <!-- 主網頁 -->

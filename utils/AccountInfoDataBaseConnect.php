@@ -20,7 +20,7 @@
  * | iImageSrc | varchar(64) | NO   |     | ./resource/DefaultAccountInfoImage.jpg |       |
  * +-----------+-------------+------+-----+----------------------------------------+-------+
  */
-require_once("AccountsDataBaseConnect.php");
+require_once("DataBaseConnection.php");
 
 define("__ACCOUNTINFO_UUID__", "iUUID");
 define("__ACCOUNTINFO_PHONE__", "iPhone");
