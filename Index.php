@@ -27,7 +27,18 @@ $productsOfPageResult = $productsConnect->getProductsOfPage($__NOW_PAGE); // 該
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 // 處理評論資訊資料表
 $commentsConnect = new CommentsDataBaseConnect();
-$randCommentsResult = $commentsConnect->getRnadComments();
+$randCommentsResult = $commentsConnect->getRnadComments(); // 隨機評論
+// 是否有發送評論狀態
+if (isset($_POST["CommentTextarea"])) {
+    // 如果還沒有登入，則跳轉到登入網頁
+    if (!isset($_SESSION["SESSION_USER"])) {
+        header("Location: login.php");
+        return;
+    }
+    $sendCommentResult = $commentsConnect->addComment($_SESSION["SESSION_USER"], 5, $_POST["CommentTextarea"]);
+    header("Location: index.php?comment=$sendCommentResult");
+    return;
+}
 ?>
 
 <!-- 主網頁 -->

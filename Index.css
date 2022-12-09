@@ -470,6 +470,7 @@ header .icons a:hover {
     border-radius: .5rem;
     margin-top: 20px;
     margin-bottom: 20px;
+    box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);
 }
 
 .comments .row .comment form {
@@ -507,6 +508,10 @@ header .icons a:hover {
     margin: .7rem 0;
     width: 100%;
     cursor: pointer;
+}
+
+.comments .row .comment form input[type="submit"]:hover {
+    background: var(--pink);
 }
 
 /* .comments .row .image */
