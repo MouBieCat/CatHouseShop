@@ -3,6 +3,28 @@
 require_once("./utils/AccountInfoDataBaseConnect.php");
 require_once("./utils/ProductsDataBaseConnect.php");
 require_once("./utils/CommentsDataBaseConnect.php");
+
+session_start();
+
+$__NOW_PAGE = 1;
+
+/* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
+// 處理帳戶資訊資料表
+$accounntInfoConnect = new AccountInfoDataBaseConnect();
+// 如果有 [SESSION_USER] 狀態
+if (isset($_SESSION["SESSION_USER"])) {
+    $accounntInfoConnect->addAccountInfo($_SESSION["SESSION_USER"]);
+}
+
+/* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
+// 處理商品資訊資料表
+$productsConnect = new ProductsDataBaseConnect();
+$productsAllResult = $productsConnect->getProducts(); // 所有商品
+$productsOfPageResult = $productsConnect->getProductsOfPage(); // 該頁數所顯示的商品
+// 處理商品頁數
+$productNeedPage = ceil($productsAllResult->num_rows / 5);
+if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productNeedPage)
+    $__NOW_PAGE = $productNeedPage;
 ?>
 
 <!-- 主網頁 -->
@@ -82,7 +104,7 @@ require_once("./utils/CommentsDataBaseConnect.php");
     <section class="icons-container">
         <!-- 特徵卡 -->
         <div class="icons">
-            <img src="./resource/Icons1.png" alt="">
+            <img src="./resource/Icons-1.png" alt="">
             <div>
                 <h3>免運費</h3> <span>在所有訂單上不收取運費</span>
             </div>
@@ -90,7 +112,7 @@ require_once("./utils/CommentsDataBaseConnect.php");
 
         <!-- 特徵卡 -->
         <div class="icons">
-            <img src="./resource/icons2.png" alt="">
+            <img src="./resource/icons-2.png" alt="">
             <div>
                 <h3>退款保證</h3> <span>我們保證在出貨七天後退款</span>
             </div>
@@ -98,7 +120,7 @@ require_once("./utils/CommentsDataBaseConnect.php");
 
         <!-- 特徵卡 -->
         <div class="icons">
-            <img src="./resource/icons3.png" alt="">
+            <img src="./resource/icons-3.png" alt="">
             <div>
                 <h3>優惠及禮品</h3> <span>註冊我們的會員可享有會員優惠及禮物</span>
             </div>
@@ -106,10 +128,50 @@ require_once("./utils/CommentsDataBaseConnect.php");
 
         <!-- 特徵卡 -->
         <div class="icons">
-            <img src="./resource/Icons4.png" alt="">
+            <img src="./resource/Icons-4.png" alt="">
             <div>
                 <h3>安全支付</h3><span>支持信用卡購買任何您想要的東西</span>
             </div>
+        </div>
+    </section>
+
+    <!-- 商品展示 -->
+    <section class="products" id="products">
+        <!-- 標題 -->
+        <h1 class="heading">所有<span>商品</span> </h1>
+
+        <!-- 商品內容框 -->
+        <div class="box-container">
+            <?php while ($productRow = $productsOfPageResult->fetch_assoc()) { /* [WHILE-HEAD] */?>
+            <!-- 商品資訊 -->
+            <div class="box">
+                <!-- 是否為限定商品 -->
+                <?php if ($productRow["pEvent"] == TRUE)
+                    echo ("<span class='event'>Event</span>"); ?>
+                <!-- 圖片 -->
+                <div class="image">
+                    <!-- 圖片來源 -->
+                    <img src=<?php echo ($productRow["pImageSrc"]); ?> alt="">
+                    <!-- 圖片資訊卡 -->
+                    <div class="icons">
+                        <a href="#" class="cart-btn">購買</a>
+                    </div>
+                </div>
+                <!-- 商品資訊 -->
+                <div class="content">
+                    <!-- 商品標題 -->
+                    <h3>
+                        <?php echo ($productRow["pTitle"]); ?>
+                    </h3>
+                    <!-- 價格、庫存 -->
+                    <div class="price">$
+                        <?php echo ($productRow["pPrice"]); ?> TWD <span>庫存：
+                            <?php echo ($productRow["pCount"]); ?>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <?php } /* [WHILE-END] */?>
         </div>
     </section>
 

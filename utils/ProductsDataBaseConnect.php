@@ -7,18 +7,20 @@
  *  pTitle varchar(16) NOT NULL, 
  *  pPrice DECIMAL(10,2) NOT NULL, 
  *  pImageSrc varchar(64) NOT NULL, 
- *  pCount int NOT NULL DEFAULT 0
+ *  pCount INT NOT NULL DEFAULT 0
+ *  pEvent TINYINT NOT NULL DEFAULT 0
  * );
  * 
- * DESCRIBE Products;
+ * DESCRIBE Product;
  * +-----------+---------------+------+-----+---------+-------+
  * | Field     | Type          | Null | Key | Default | Extra |
  * +-----------+---------------+------+-----+---------+-------+
- * | pID       | int           | NO   | PRI | NULL    |       |
+ * | pID       | int           | NO   | PRI | NULL    |       | -> SELECT RAND()*(99999999-10000000)+10000000;
  * | pTitle    | varchar(16)   | NO   |     | NULL    |       |
  * | pPrice    | decimal(10,2) | NO   |     | NULL    |       |
  * | pImageSrc | varchar(64)   | NO   |     | NULL    |       |
  * | pCount    | int           | NO   |     | 0       |       |
+ * | pEvent    | tinyint       | NO   |     | 0       |       |
  * +-----------+---------------+------+-----+---------+-------+
  */
 require_once("DataBaseConnection.php");
