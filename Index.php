@@ -161,7 +161,8 @@ if (isset($_POST["CommentTextarea"])) {
             <div class="box">
                 <!-- 是否為限定商品 -->
                 <?php if ($productRow["pEvent"] == TRUE)
-                    echo ("<span class='event'>Event</span>"); ?>
+                    echo ("<span class='event'>限定</span>"); ?>
+
                 <!-- 圖片 -->
                 <div class="image">
                     <!-- 圖片來源 -->

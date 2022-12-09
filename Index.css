@@ -264,7 +264,7 @@ header .icons a:hover {
     padding: .7rem 1rem;
     font-size: 2rem;
     color: var(--pink);
-    background: rgba(255, 51, 153, .05);
+    background: rgba(255, 51, 153, .15);
     z-index: 1;
     border-radius: .5rem;
 }
