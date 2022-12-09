@@ -5,9 +5,9 @@
  * CREATE TABLE Product (
  *  pID INT NOT NULL PRIMARY KEY, 
  *  pTitle varchar(16) NOT NULL, 
- *  pPrice DECIMAL(10,2) NOT NULL, 
+ *  pPrice DECIMAL(10,0) NOT NULL, 
  *  pImageSrc varchar(64) NOT NULL, 
- *  pCount INT NOT NULL DEFAULT 0
+ *  pCount INT NOT NULL DEFAULT 0,
  *  pEvent TINYINT NOT NULL DEFAULT 0
  * );
  * 
@@ -17,7 +17,7 @@
  * +-----------+---------------+------+-----+---------+-------+
  * | pID       | int           | NO   | PRI | NULL    |       | -> SELECT RAND()*(99999999-10000000)+10000000;
  * | pTitle    | varchar(16)   | NO   |     | NULL    |       |
- * | pPrice    | decimal(10,2) | NO   |     | NULL    |       |
+ * | pPrice    | decimal(10,0) | NO   |     | NULL    |       |
  * | pImageSrc | varchar(64)   | NO   |     | NULL    |       |
  * | pCount    | int           | NO   |     | 0       |       |
  * | pEvent    | tinyint       | NO   |     | 0       |       |

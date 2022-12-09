@@ -20,11 +20,11 @@ if (isset($_SESSION["SESSION_USER"])) {
 // 處理商品資訊資料表
 $productsConnect = new ProductsDataBaseConnect();
 $productsAllResult = $productsConnect->getProducts(); // 所有商品
-$productsOfPageResult = $productsConnect->getProductsOfPage(); // 該頁數所顯示的商品
 // 處理商品頁數
-$productNeedPage = ceil($productsAllResult->num_rows / 5);
-if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productNeedPage)
-    $__NOW_PAGE = $productNeedPage;
+$productsNeedPage = ceil($productsAllResult->num_rows / 5);
+if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productsNeedPage)
+    $__NOW_PAGE = $_GET["page"];
+$productsOfPageResult = $productsConnect->getProductsOfPage($__NOW_PAGE); // 該頁數所顯示的商品
 ?>
 
 <!-- 主網頁 -->
@@ -165,13 +165,35 @@ if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productNeedPa
                     </h3>
                     <!-- 價格、庫存 -->
                     <div class="price">$
-                        <?php echo ($productRow["pPrice"]); ?> TWD <span>庫存：
+                        <?php echo ($productRow["pPrice"]); ?> <span>庫存：
                             <?php echo ($productRow["pCount"]); ?>
                         </span>
                     </div>
                 </div>
             </div>
             <?php } /* [WHILE-END] */?>
+        </div>
+
+        <!-- 分頁按鈕 -->
+        <div class="page-container">
+            <?php
+            /* 是否有更多頁數 ( _NOW - 2 > 1 ) */
+            if ($__NOW_PAGE - 2 > 1)
+                echo ("<a href='index.php?page=1' class='more'>1...</a>");
+            for ($tempPage = $__NOW_PAGE - 2; $tempPage <= $__NOW_PAGE + 2; $tempPage++) {
+                /* 如果頁數不合法 */
+                if ($tempPage < 1 || $tempPage > $productsNeedPage)
+                    continue;
+                /* 該按鈕將被如何顯示 */
+                if ($tempPage == $__NOW_PAGE)
+                    echo ("<a class='select'>$tempPage</a>");
+                else
+                    echo ("<a href='index.php?page=$tempPage' class='no-select'>$tempPage</a>");
+            }
+            /* 是否有更多頁數 ( _NOW + 2 < _MAX ) */
+            if ($__NOW_PAGE + 2 < $productsNeedPage)
+                echo ("<a href='index.php?page=$productsNeedPage' class='more'>...$productsNeedPage</a>");
+            ?>
         </div>
     </section>
 
