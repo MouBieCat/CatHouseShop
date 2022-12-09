@@ -225,7 +225,7 @@ $randCommentsResult = $commentsConnect->getRnadComments();
                 <!-- 發表者資訊 -->
                 <div class="user">
                     <img src=<?php echo ($commentAccountInfoRow["iImageSrc"]); ?> alt="">
-                    <div class="user-info">
+                    <div>
                         <h3>
                             <?php echo ($commentAccountInfoRow["iAlias"]); ?>
                         </h3>

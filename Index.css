@@ -338,6 +338,10 @@ header .icons a:hover {
     display: flex;
     justify-content: center;
     padding: 10px 10px;
+    border: .1rem solid rgba(0, 0, 0, .1);
+    border-radius: 365px;
+    margin-left: 20%;
+    margin-right: 20%;
 }
 
 .products .page-container a {
@@ -397,9 +401,10 @@ header .icons a:hover {
 /* .comments .box-container .box .fa-quote-right */
 .comments .box-container .box .fa-quote-right {
     position: absolute;
-    bottom:3rem; right:3rem;
+    bottom: 3rem;
+    right: 3rem;
     font-size: 6rem;
-    color:#eee;
+    color: #eee;
 }
 
 /* .comments .box-container .box .stars */
