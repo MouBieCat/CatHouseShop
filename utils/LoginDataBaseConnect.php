@@ -1,26 +1,4 @@
 <?php
-/**
- * 相關數據表結構：
- * 
- * 資料庫 Account 表資訊
- * 
- * CREATE TABLE Account(
- *  uName varchar(16) PRIMARY KEY NOT NULL, 
- *  uPasswd varchar(32) NOT NULL, 
- *  uUUID varchar(36) NOT NULL,
- *  uTime varchar(20) NOT NULL
- * );
- * 
- * DESCRIBE Account;
- * +---------+-------------+------+-----+---------+-------+
- * | Field   | Type        | Null | Key | Default | Extra |
- * +---------+-------------+------+-----+---------+-------+
- * | uName   | varchar(16) | NO   | PRI | NULL    |       |
- * | uPasswd | varchar(32) | NO   |     | NULL    |       |
- * | uUUID   | varchar(36) | NO   |     | NULL    |       |
- * | uTime   | varchar(20) | NO   |     | NULL    |       |
- * +---------+-------------+------+-----+---------+-------+
- */
 require_once("AccountsDataBaseConnect.php");
 
 define("__LOGIN_RESULT__", "__RESULT__");
