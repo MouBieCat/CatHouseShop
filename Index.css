@@ -56,6 +56,16 @@ header {
     color: var(--pink);
 }
 
+.messagebox {
+    flex: 1 1 40rem;
+    margin-top: 20px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: var(--pink);
+    color: white;
+    padding: 10px;
+}
+
 /* header #toggler */
 header #toggler {
     display: none;
@@ -297,7 +307,7 @@ header .icons a:hover {
     color: #fff;
 }
 
-.products .box-container .box .image .icons .cart-btn {
+.products .box-container .box .image .icons .fa-shopping-cart {
     border-left: .1rem solid #fff7;
     border-right: .1rem solid #fff7;
     width: 100%;
@@ -436,6 +446,76 @@ header .icons a:hover {
 .comments .box-container .box .user span {
     font-size: 1.5rem;
     color: #999;
+}
+
+/* .comments .row */
+.comments .row {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    gap: 1.5rem;
+    align-items: center;
+    border-top: 3px solid var(--pink);
+    margin-top: 20px;
+}
+
+/* .comments .row .comment */
+.comments .row .comment {
+    flex: 1 1 40rem;
+    font-size: 1.5rem;
+}
+
+.comments .row .comment p {
+    padding: 20px;
+    border: .1rem solid rgba(0, 0, 0, .1);
+    border-radius: .5rem;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.comments .row .comment form {
+    flex: 1 1 40rem;
+    padding: 2rem 2.5rem;
+    box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);
+    border: .1rem solid rgba(0, 0, 0, .1);
+    background: #fff;
+    border-radius: .5rem;
+}
+
+.comments .row .comment form textarea {
+    padding: 1rem;
+    font-size: 1.7rem;
+    color: #333;
+    text-transform: none;
+    border: .1rem solid rgba(0, 0, 0, .1);
+    border-radius: .5rem;
+    margin: .7rem 0;
+    width: 100%;
+    resize: none;
+}
+
+.comments .row .comment form textarea:focus {
+    border-color: var(--pink);
+}
+
+.comments .row .comment form input[type="submit"] {
+    padding: 1rem;
+    font-size: 1.7rem;
+    color: #333;
+    text-transform: none;
+    border: .1rem solid rgba(0, 0, 0, .1);
+    border-radius: .5rem;
+    margin: .7rem 0;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* .comments .row .image */
+.comments .row .image {
+    flex: 1 1 40rem;
+}
+
+.comments .row .image img {
+    width: 100%;
 }
 
 /* footer .credit */

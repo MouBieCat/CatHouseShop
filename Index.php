@@ -157,7 +157,7 @@ $randCommentsResult = $commentsConnect->getRnadComments();
                     <img src=<?php echo ($productRow["pImageSrc"]); ?> alt="">
                     <!-- 圖片資訊卡 -->
                     <div class="icons">
-                        <a href="#" class="cart-btn">購買</a>
+                        <a href="#" class="fas fa-shopping-cart"> 加入購物車</a>
                     </div>
                 </div>
                 <!-- 商品資訊 -->
@@ -238,6 +238,36 @@ $randCommentsResult = $commentsConnect->getRnadComments();
                 <span class="fas fa-quote-right"></span>
             </div>
             <?php } /* [WHILE-END] */?>
+        </div>
+
+        <!-- 發表評論區 -->
+        <div class="row">
+            <!-- 發表評論區塊 -->
+            <div class="comment">
+                <!-- 接收發送評論結果 -->
+                <?php if (isset($_GET["comment"])) {
+                    $message = $_GET["comment"];
+                    echo ("<div class='messagebox'><h3>$message</h3></div>");
+                }
+                ?>
+
+                <!-- 評論須知 -->
+                <p>尊重每一個人。 絕對不容忍騷擾、政治迫害、性別歧視、種族主義或仇恨言論。</p>
+                <p>Treat everyone with respect. Absolutely no harassment, witch hunting, sexism, racism, or hate speech
+                    will be tolerated.</p>
+
+                <!-- 評論表單 -->
+                <form method="POST" action="index.php">
+                    <!-- 內容輸入框 -->
+                    <textarea rows="10" name="CommentTextarea" maxlength="256" placeholder="請在這裡輸入您寶貴的想法！"
+                        class="field"></textarea>
+                    <!-- 送出 -->
+                    <input type="submit" name="CommentButton" value="發表評論">
+                </form>
+            </div>
+
+            <!-- 圖示 -->
+            <div class="image"> <img src="./resource/images-comments.svg" alt=""> </div>
         </div>
     </section>
 
