@@ -110,7 +110,7 @@ header .icons a:hover {
     display: flex;
     align-items: center;
     min-height: 100vh;
-    background: url(./Resource/Index-HomeImage.jpg) no-repeat;
+    background: url(./Resource/images-home.jpg) no-repeat;
     background-size: cover;
     background-position: center;
 }
@@ -239,7 +239,7 @@ header .icons a:hover {
 
 /* .products .box-container .box */
 .products .box-container .box {
-    flex:1 1 3rem;
+    flex: 1 1 3rem;
     box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);
     border-radius: .5rem;
     border: .1rem solid rgba(0, 0, 0, .1);
@@ -351,6 +351,11 @@ header .icons a:hover {
     border-radius: 10px;
 }
 
+.products .page-container a:hover {
+    color: white;
+    background: var(--pink);
+}
+
 /* .products .page-container .select */
 .products .page-container .select {
     color: white;
@@ -359,9 +364,73 @@ header .icons a:hover {
 
 /* .products .page-container .no-select */
 /* .products .page-container .more */
-.products .page-container .no-select, .products .page-container .more {
+.products .page-container .no-select,
+.products .page-container .more {
     color: rgba(0, 0, 0, .4);
     cursor: pointer;
+}
+
+/* .comments .box-container */
+.box-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+/* .comments .box-container .box */
+.comments .box-container .box {
+    flex: 1 1 30rem;
+    box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .1);
+    border-radius: .5rem;
+    padding: 3rem 2rem;
+    position: relative;
+    border: .1rem solid rgba(0, 0, 0, .1);
+}
+
+.comments .box-container .box p {
+    color: #999;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    padding-top: 2rem;
+}
+
+/* .comments .box-container .box .fa-quote-right */
+.comments .box-container .box .fa-quote-right {
+    position: absolute;
+    bottom:3rem; right:3rem;
+    font-size: 6rem;
+    color:#eee;
+}
+
+/* .comments .box-container .box .stars */
+.comments .box-container .box .stars i {
+    color: var(--pink);
+    font-size: 2rem;
+}
+
+/* .comments .box-container .box .user */
+.comments .box-container .box .user {
+    display: flex;
+    align-items: center;
+    padding-top: 2rem;
+}
+
+.comments .box-container .box .user img {
+    height: 6rem;
+    width: 6rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+.comments .box-container .box .user h3 {
+    font-size: 2rem;
+    color: #333;
+}
+
+.comments .box-container .box .user span {
+    font-size: 1.5rem;
+    color: #999;
 }
 
 /* footer .credit */

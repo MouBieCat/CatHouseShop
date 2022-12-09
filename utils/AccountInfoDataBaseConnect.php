@@ -6,19 +6,19 @@
  *  iUUID varchar(36) PRIMARY KEY NOT NULL, 
  *  iPhone varchar(15) NULL, 
  *  iEmail varchar(64) NULL, iAlias varchar(16) NOT NULL DEFAULT "Member", 
- *  iImageSrc varchar(64) NOT NULL DEFAULT "./resource/DefaultAccountInfoImage.jpg"
+ *  iImageSrc varchar(64) NOT NULL DEFAULT "./accounts/default.jpg"
  * );
  * 
  * DESCRIBE AccountInfo;
- * +-----------+-------------+------+-----+----------------------------------------+-------+
- * | Field     | Type        | Null | Key | Default                                | Extra |
- * +-----------+-------------+------+-----+----------------------------------------+-------+
- * | iUUID     | varchar(36) | NO   | PRI | NULL                                   |       |
- * | iPhone    | varchar(15) | YES  |     | NULL                                   |       |
- * | iEmail    | varchar(64) | YES  |     | NULL                                   |       |
- * | iAlias    | varchar(16) | NO   |     | Member                                 |       |
- * | iImageSrc | varchar(64) | NO   |     | ./resource/DefaultAccountInfoImage.jpg |       |
- * +-----------+-------------+------+-----+----------------------------------------+-------+
+ * +-----------+-------------+------+-----+---------------------------+-------+
+ * | Field     | Type        | Null | Key | Default                   | Extra |
+ * +-----------+-------------+------+-----+---------------------------+-------+
+ * | iUUID     | varchar(36) | NO   | PRI | NULL                      |       |
+ * | iPhone    | varchar(15) | YES  |     | NULL                      |       |
+ * | iEmail    | varchar(64) | YES  |     | NULL                      |       |
+ * | iAlias    | varchar(16) | NO   |     | Member                    |       |
+ * | iImageSrc | varchar(64) | NO   |     | ./accounts/default.jpg    |       |
+ * +-----------+-------------+------+-----+---------------------------+-------+
  */
 require_once("DataBaseConnection.php");
 

@@ -15,7 +15,6 @@ $accounntInfoConnect = new AccountInfoDataBaseConnect();
 if (isset($_SESSION["SESSION_USER"])) {
     $accounntInfoConnect->addAccountInfo($_SESSION["SESSION_USER"]);
 }
-
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 // 處理商品資訊資料表
 $productsConnect = new ProductsDataBaseConnect();
@@ -25,6 +24,10 @@ $productsNeedPage = ceil($productsAllResult->num_rows / 5);
 if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productsNeedPage)
     $__NOW_PAGE = $_GET["page"];
 $productsOfPageResult = $productsConnect->getProductsOfPage($__NOW_PAGE); // 該頁數所顯示的商品
+/* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
+// 處理評論資訊資料表
+$commentsConnect = new CommentsDataBaseConnect();
+$randCommentsResult = $commentsConnect->getRnadComments();
 ?>
 
 <!-- 主網頁 -->
@@ -87,7 +90,7 @@ $productsOfPageResult = $productsConnect->getProductsOfPage($__NOW_PAGE); // 該
         <div class="row">
             <!-- 影片 -->
             <div class="video-container">
-                <video src="./resource/Index-AboutVideo.mp4" loop autoplay muted></video>
+                <video src="./resource/about-video.mp4" loop autoplay muted></video>
                 <h3>最 佳 的 花 店 鋪</h3>
             </div>
 
@@ -194,6 +197,47 @@ $productsOfPageResult = $productsConnect->getProductsOfPage($__NOW_PAGE); // 該
             if ($__NOW_PAGE + 2 < $productsNeedPage)
                 echo ("<a href='index.php?page=$productsNeedPage' class='more'>...$productsNeedPage</a>");
             ?>
+        </div>
+    </section>
+
+    <!-- 帳戶評論 -->
+    <section class="comments" id="comments">
+        <!-- 標題 -->
+        <h1 class="heading">五星<span>評論</span> </h1>
+
+        <!-- 評論內容框 -->
+        <div class="box-container">
+            <?php
+            while ($randCommentRow = $randCommentsResult->fetch_assoc()) {
+                $commentAccountInfoResult = $accounntInfoConnect->getAccountInfo($randCommentRow["cUUID"]);
+                $commentAccountInfoRow = $commentAccountInfoResult->fetch_assoc(); /* [WHILE-HEAD] */?>
+            <!-- 帳戶評論 -->
+            <div class="box">
+                <!-- 星星 -->
+                <div class="stars">
+                    <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i
+                        class="fas fa-star"></i> <i class="fas fa-star"></i>
+                </div>
+                <!-- 發表內容 -->
+                <p>
+                    <?php echo ($randCommentRow["cMessage"]); ?>
+                </p>
+                <!-- 發表者資訊 -->
+                <div class="user">
+                    <img src=<?php echo ($commentAccountInfoRow["iImageSrc"]); ?> alt="">
+                    <div class="user-info">
+                        <h3>
+                            <?php echo ($commentAccountInfoRow["iAlias"]); ?>
+                        </h3>
+                        <span>發表時間：
+                            <?php echo ($randCommentRow["cTime"]); ?>
+                        </span>
+                    </div>
+                </div>
+                <!-- 逗號樣式 -->
+                <span class="fas fa-quote-right"></span>
+            </div>
+            <?php } /* [WHILE-END] */?>
         </div>
     </section>
 
