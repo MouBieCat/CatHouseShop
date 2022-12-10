@@ -10,19 +10,49 @@ session_start();
 $__NOW_PAGE = 1;
 
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
+
 // 處理帳戶資訊資料表
 $accounntInfoConnect = new AccountInfoDataBaseConnect();
 // 如果有 [SESSION_USER] 狀態
 if (isset($_SESSION["SESSION_USER"])) {
     $accounntInfoConnect->addAccountInfo($_SESSION["SESSION_USER"]);
 }
+
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
+
 // 處理訂單資料表
 $ordersConnect = new OrdersDataBaseConnect();
 if (isset($_SESSION["SESSION_USER"])) {
+    $ordersConnect->clearInvalidOrders($_SESSION["SESSION_USER"]);
     $ordersResult = $ordersConnect->getOrdersByUUID($_SESSION["SESSION_USER"]);
 }
+// 是否有添加訂單請求
+if (isset($_POST["AddProductTextBox"])) {
+    // 如果還沒有登入，則跳轉到登入網頁
+    if (!isset($_SESSION["SESSION_USER"])) {
+        header("Location: login.php");
+        return;
+    }
+    
+    $ordersConnect->addOrder($_SESSION["SESSION_USER"], $_POST["AddProductTextBox"], 1);
+    header("Location: index.php");
+    return;
+}
+// 是否有刪除訂單請求
+if (isset($_POST["DeleteProductTextBox"])) {
+    // 如果還沒有登入，則跳轉到登入網頁
+    if (!isset($_SESSION["SESSION_USER"])) {
+        header("Location: login.php");
+        return;
+    }
+
+    $ordersConnect->removeOrder($_SESSION["SESSION_USER"], $_POST["DeleteProductTextBox"]);
+    header("Location: index.php");
+    return;
+}
+
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
+
 // 處理商品資訊資料表
 $productsConnect = new ProductsDataBaseConnect();
 $productsAllResult = $productsConnect->getProducts(); // 所有商品
@@ -31,7 +61,9 @@ $productsNeedPage = ceil($productsAllResult->num_rows / 5);
 if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productsNeedPage)
     $__NOW_PAGE = $_GET["page"];
 $productsOfPageResult = $productsConnect->getProductsOfPage($__NOW_PAGE); // 該頁數所顯示的商品
+
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
+
 // 處理評論資訊資料表
 $commentsConnect = new CommentsDataBaseConnect();
 $randCommentsResult = $commentsConnect->getRnadComments(); // 隨機評論
@@ -46,6 +78,7 @@ if (isset($_POST["CommentTextarea"])) {
     header("Location: index.php?comment=$sendCommentResult");
     return;
 }
+
 ?>
 
 <!-- 主網頁 -->
@@ -105,6 +138,14 @@ if (isset($_POST["CommentTextarea"])) {
                 ?>
                 <!-- 購買項目 -->
                 <div class="box">
+                    <!-- 刪除訂單 -->
+                    <form method="POST" action="index.php">
+                        <input type="text" style="display: none;" name="DeleteProductTextBox" value=<?php echo
+                            ($productRow["pID"]); ?>>
+                        <button type="submit" class="fas fa-trash" name="DeleteProductButton"
+                            aria-label="delete-product"></button>
+                    </form>
+
                     <!-- 商品圖片來源 -->
                     <img src=<?php echo ($productRow["pImageSrc"]); ?> alt="">
                     <div class="content">
@@ -224,10 +265,14 @@ if (isset($_POST["CommentTextarea"])) {
                 <div class="image">
                     <!-- 圖片來源 -->
                     <img src=<?php echo ($productRow["pImageSrc"]); ?> alt="">
-                    <!-- 圖片資訊卡 -->
-                    <div class="icons">
-                        <a href="#" class="fas fa-shopping-cart"> 加入購物車</a>
-                    </div>
+
+                    <!-- 新增訂單 -->
+                    <form method="POST" action="index.php">
+                        <input type="text" style="display: none;" name="AddProductTextBox" value=<?php echo
+                    ($productRow["pID"]); ?>>
+                        <button type="submit" class="fas fa-shopping-cart" name="AddProductButton"
+                            aria-label="add-product"> 添加至購物車</button>
+                    </form>
                 </div>
                 <!-- 商品資訊 -->
                 <div class="content">

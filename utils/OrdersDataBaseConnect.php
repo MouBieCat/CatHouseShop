@@ -18,6 +18,7 @@
  * +----------+-------------+------+-----+---------+-------+
  */
 require_once("DataBaseConnection.php");
+require_once("ProductsDataBaseConnect.php");
 
 define("__ORDERS_UUID__", "oUUID");
 define("__ORDERS_PRODUCT__", "oProduct");
@@ -94,9 +95,9 @@ final class OrdersDataBaseConnect extends DataBaseConnect
 
     /**
      * 更新訂單資料
-     * @param string $_UUID
-     * @param int $_Product
-     * @param int $_Count
+     * @param string $_UUID 標識碼
+     * @param int $_Product 商品
+     * @param int $_Count   數量
      * @return bool
      */
     private function updateOrder(string $_UUID, int $_Product, int $_Count): bool
@@ -132,6 +133,24 @@ final class OrdersDataBaseConnect extends DataBaseConnect
     {
         $deleteOrderCommand = "DELETE FROM Orders WHERE " . __ORDERS_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($deleteOrderCommand);
+    }
+
+    /**
+     * 清除無效的商品訂單
+     * @param string $_UUID 標識碼
+     * @return void
+     */
+    public function clearInvalidOrders(string $_UUID): void
+    {
+        $selectResult = $this->getOrdersByUUID($_UUID);
+        if ($selectResult === 0)
+            return;
+        $productConnect = new ProductsDataBaseConnect();
+        while ($orderRow = $selectResult->fetch_assoc()) {
+            $productResult = $productConnect->getProduct($orderRow["oProduct"]);
+            if ($productResult->num_rows === 0)
+                $this->removeOrder($_UUID, $orderRow["oProduct"]);
+        }
     }
 }
 ?>
