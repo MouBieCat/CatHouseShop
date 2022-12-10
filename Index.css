@@ -3,6 +3,8 @@
 /* 樣式基礎配置 */
 :root {
     --pink: #e84393;
+    --outline: .1rem solid rgba(0, 0, 0, .1);
+    --outline-hover: .2rem solid var(--pink);
 }
 
 * {
@@ -105,13 +107,83 @@ header .navbar a:hover {
 }
 
 /* header .icons */
-header .icons a {
+header .icons label {
     font-size: 2.5rem;
     color: #333;
     margin-left: 1.5rem;
+    cursor: pointer;
 }
 
-header .icons a:hover {
+header .icons label:hover {
+    color: var(--pink);
+}
+
+/* header .icons .shopping */
+header .icons .shopping {
+    position: absolute;
+    top: 110%;
+    right: -110%;
+    padding: 1rem;
+    border-radius: .5rem;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);
+    width: 35rem;
+    background: #fff;
+}
+
+header .icons .shopping p {
+    font-size: 2.5rem;
+    padding: 1rem 0;
+    text-align: center;
+    color: black
+}
+
+header .icons .shopping a {
+    font-size: 1.7rem;
+    display: block;
+    text-align: center;
+    margin: 1rem;
+}
+
+/* header .icons .shopping.active */
+header .icons .shopping.active {
+    right: 2rem;
+    transition: .4s linear;
+}
+
+/* header .icons .shopping.active .box */
+header .icons .shopping.active .box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    margin: 1rem 0;
+    outline-offset: -1rem;
+    transition: .2s linear;
+}
+
+header .icons .shopping.active .box:hover {
+    outline-offset: 0rem;
+    outline: var(--outline-hover);
+}
+
+header .icons .shopping.active .box img {
+    height: 10rem;
+}
+
+/* header .icons .shopping.active .box .content */
+header .icons .shopping.active .box .content h3 {
+    color: black;
+    font-size: 1.7rem;
+    padding-bottom: 1rem;
+}
+
+header .icons .shopping.active .box .content span {
+    color: black;
+    font-size: 1.6rem;
+}
+
+/* header .icons .shopping.active .box .content .lack-of-demand */
+header .icons .shopping.active .box .content .lack-of-demand {
     color: var(--pink);
 }
 
@@ -254,6 +326,13 @@ header .icons a:hover {
     border-radius: .5rem;
     border: .1rem solid rgba(0, 0, 0, .1);
     position: relative;
+    outline-offset: -1rem;
+    transition: .2s linear;
+}
+
+.products .box-container .box:hover {
+    outline-offset: 0rem;
+    outline: var(--outline-hover);
 }
 
 /* .products .box-container .box .discount */

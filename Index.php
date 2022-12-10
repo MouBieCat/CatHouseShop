@@ -3,6 +3,7 @@
 require_once("./utils/AccountInfoDataBaseConnect.php");
 require_once("./utils/ProductsDataBaseConnect.php");
 require_once("./utils/CommentsDataBaseConnect.php");
+require_once("./utils/OrdersDataBaseConnect.php");
 
 session_start();
 
@@ -14,6 +15,12 @@ $accounntInfoConnect = new AccountInfoDataBaseConnect();
 // 如果有 [SESSION_USER] 狀態
 if (isset($_SESSION["SESSION_USER"])) {
     $accounntInfoConnect->addAccountInfo($_SESSION["SESSION_USER"]);
+}
+/* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
+// 處理訂單資料表
+$ordersConnect = new OrdersDataBaseConnect();
+if (isset($_SESSION["SESSION_USER"])) {
+    $ordersResult = $ordersConnect->getOrdersByUUID($_SESSION["SESSION_USER"]);
 }
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 // 處理商品資訊資料表
@@ -78,8 +85,58 @@ if (isset($_POST["CommentTextarea"])) {
 
         <!-- 個人資訊 -->
         <div class="icons">
-            <a href="#" class="fas fa-shopping-cart"></a>
-            <a href="#" class="fas fa-user"></a>
+            <!-- 查找 -->
+            <label id="switch-search" class="fas fa-search"></label>
+
+            <!-- 購物清單 -->
+            <label id="switch-shopping" class="fas fa-shopping-cart"></label>
+            <!-- 購買清單資訊卡 -->
+            <div class="shopping" id="shopping">
+                <?php
+                /* 判斷是否為登入狀態 */
+                if (isset($_SESSION["SESSION_USER"])) { /* [IF-HEAD] */
+                    $totalMoney = 0;
+                    while ($orderRow = $ordersResult->fetch_assoc()) { /* [WHILE-HEAD] */
+                        $productResult = $productsConnect->getProduct($orderRow["oProduct"]);
+                        $productRow = $productResult->fetch_assoc();
+                        /* 處理所需資料 */
+                        $prodictMoney = $productRow["pPrice"] * $orderRow["oCount"];
+                        $totalMoney += $prodictMoney;
+                ?>
+                <!-- 購買項目 -->
+                <div class="box">
+                    <!-- 商品圖片來源 -->
+                    <img src=<?php echo ($productRow["pImageSrc"]); ?> alt="">
+                    <div class="content">
+                        <!-- 商品標題 -->
+                        <h3 class="title">
+                            <?php echo ($productRow["pTitle"]); ?>
+                        </h3>
+                        <!-- 價格 * 數量 = 小計 -->
+                        <span class="price-count">
+                            小計：$
+                            <?php echo ($prodictMoney); ?> -
+                            數量：
+                            <?php echo ($orderRow["oCount"]); ?>
+                        </span>
+                        <!-- 貨物是否不足 -->
+                        <span class="lack-of-demand">
+                            <?php if ($orderRow["oCount"] > $productRow["pCount"])
+                            echo ("<br />目前貨物正在短缺中"); ?>
+                        </span>
+                    </div>
+                </div>
+                <?php } /* [IF-END] */?>
+                <!-- 結帳及總金額 -->
+                <p>合計：$
+                    <?php echo ($totalMoney); ?>
+                </p>
+                <a href="#">前往結帳</a>
+                <?php } /* [IF-END] */?>
+            </div>
+
+            <!-- 使用者 -->
+            <label id="switch-user" class="fas fa-user"></label>
         </div>
     </header>
 
@@ -288,4 +345,8 @@ if (isset($_POST["CommentTextarea"])) {
         <!-- 聲明 -->
         <div class="credit">Create By <span> Mr. CatHouse </span> | All Rights Reserved</div>
     </footer>
+
+    <!-- JavaScript -->
+    <script src="index.js"></script>
+</body>ript src="index.js"></script>
 </body>
