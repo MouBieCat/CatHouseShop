@@ -393,5 +393,5 @@ if (isset($_POST["CommentTextarea"])) {
 
     <!-- JavaScript -->
     <script src="index.js"></script>
-</body>ript src="index.js"></script>
+</body>
 </body>
