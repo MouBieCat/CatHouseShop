@@ -56,22 +56,17 @@ if (isset($_POST["DeleteProductTextBox"])) {
 
 // 處理商品資訊資料表
 $productsConnect = new ProductsDataBaseConnect();
-if (isset($_GET["search"])) {
+if (isset($_GET["search"]))
     $_SEARCH = $_GET["search"];
-    $productsAllResult = $productsConnect->getSearchProducts($_GET["search"]); // 所有相關商品
-}
-else
-    $productsAllResult = $productsConnect->getProducts(); // 所有商品
+
+$productsAllResult = $productsConnect->getProducts($_SEARCH); // 所有商品
 
 // 處理商品頁數
 $productsNeedPage = ceil($productsAllResult->num_rows / 5);
 if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productsNeedPage)
     $__NOW_PAGE = $_GET["page"];
 
-if (isset($_GET["search"]))
-    $productsOfPageResult = $productsConnect->getSearchProductsOfPage($__NOW_PAGE, 5, $_GET["search"]);
-else
-    $productsOfPageResult = $productsConnect->getProductsOfPage($__NOW_PAGE); // 該頁數所顯示的商品
+$productsOfPageResult = $productsConnect->getProductsOfPage($__NOW_PAGE, 5, $_SEARCH); // 該頁數所顯示的商品
 
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 
@@ -285,7 +280,7 @@ if (isset($_POST["CommentTextarea"])) {
                     <!-- 新增訂單 -->
                     <form method="POST" action="index.php">
                         <input type="text" style="display: none;" name="AddProductTextBox" value=<?php echo
-                            ($productRow["pID"]); ?>>
+                    ($productRow["pID"]); ?>>
                         <button type="submit" class="fas fa-shopping-cart" name="AddProductButton"
                             aria-label="add-product"> 添加至購物車</button>
                     </form>
