@@ -43,10 +43,13 @@ final class ProductsDataBaseConnect extends DataBaseConnect
 
     /**
      * 獲取所有商品資料
+     * @param  string $_Search 搜索
      * @return mysqli_result
      */
-    public function getProducts(): mysqli_result
+    public function getProducts(string $_Search = NULL): mysqli_result
     {
+        if ($_Search !== NULL)
+            return $this->getSearchProducts($_Search);
         $selectProductsCommand = "SELECT * FROM Product;";
         return $this->m_ConnectObject->query($selectProductsCommand);
     }
@@ -64,17 +67,49 @@ final class ProductsDataBaseConnect extends DataBaseConnect
 
     /**
      * 根據頁數獲取指定數量的商品資料
-     * @param int $_Page  頁數
-     * @param int $_Count 數量
+     * @param int     $_Page  頁數
+     * @param int     $_Count 數量
+     * @param  string $_Search 搜索
      * @return mysqli_result
      */
-    public function getProductsOfPage(int $_Page = 1, int $_Count = 5): mysqli_result
+    public function getProductsOfPage(int $_Page = 1, int $_Count = 5, string $_Search = NULL): mysqli_result
+    {
+        if ($_Page < 1)
+            $_Page = 1;
+
+        if ($_Search !== NULL)
+            return $this->getSearchProductsOfPage($_Page, $_Count, $_Search);
+        $startProductIndex = ($_Page - 1) * $_Count;
+        $selectProductOfPageCommand = "SELECT * FROM Product LIMIT $startProductIndex, $_Count;";
+        return $this->m_ConnectObject->query($selectProductOfPageCommand);
+    }
+
+    /**
+     * 獲取相關標題的商品資料
+     * @param string $_Title 標題
+     * @return mysqli_result
+     */
+    public function getSearchProducts(string $_Title): mysqli_result
+    {
+        $selectSearchProductsCommand = "SELECT * FROM Product WHERE " . __PRODUCT_TITLE__ . " LIKE '%$_Title%';";
+        return $this->m_ConnectObject->query($selectSearchProductsCommand);
+    }
+
+    /**
+     * 獲取相關標題頁數的商品資料
+     * @param int    $_Page  頁數
+     * @param int    $_Count 數量
+     * @param string $_Title 標題
+     * @return mysqli_result
+     */
+    public function getSearchProductsOfPage(int $_Page = 1, int $_Count = 5, string $_Title): mysqli_result
     {
         if ($_Page < 1)
             $_Page = 1;
         $startProductIndex = ($_Page - 1) * $_Count;
-        $selectProductOfPageCommand = "SELECT * FROM Product LIMIT $startProductIndex, $_Count;";
-        return $this->m_ConnectObject->query($selectProductOfPageCommand);
+        $selectSearchProductsCommand = "SELECT * FROM Product WHERE " . __PRODUCT_TITLE__ . " LIKE '%$_Title%' LIMIT $startProductIndex, $_Count;";
+        print($selectSearchProductsCommand);
+        return $this->m_ConnectObject->query($selectSearchProductsCommand);
     }
 }
 ?>

@@ -33,7 +33,7 @@ if (isset($_POST["AddProductTextBox"])) {
         header("Location: login.php");
         return;
     }
-    
+
     $ordersConnect->addOrder($_SESSION["SESSION_USER"], $_POST["AddProductTextBox"], 1);
     header("Location: index.php");
     return;
@@ -55,12 +55,20 @@ if (isset($_POST["DeleteProductTextBox"])) {
 
 // 處理商品資訊資料表
 $productsConnect = new ProductsDataBaseConnect();
-$productsAllResult = $productsConnect->getProducts(); // 所有商品
+if (isset($_GET["search"]))
+    $productsAllResult = $productsConnect->getSearchProducts($_GET["search"]); // 所有相關商品
+else
+    $productsAllResult = $productsConnect->getProducts(); // 所有商品
+
 // 處理商品頁數
 $productsNeedPage = ceil($productsAllResult->num_rows / 5);
 if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productsNeedPage)
     $__NOW_PAGE = $_GET["page"];
-$productsOfPageResult = $productsConnect->getProductsOfPage($__NOW_PAGE); // 該頁數所顯示的商品
+
+if (isset($_GET["search"]))
+    $productsOfPageResult = $productsConnect->getSearchProductsOfPage($__NOW_PAGE, 5, $_GET["search"]);
+else
+    $productsOfPageResult = $productsConnect->getProductsOfPage($__NOW_PAGE); // 該頁數所顯示的商品
 
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 
@@ -106,7 +114,7 @@ if (isset($_POST["CommentTextarea"])) {
         <input type="checkbox" id="toggler" aria-label="toggler">
 
         <!-- 商標 -->
-        <a href="#" class="logo">Cat House<span>.</span></a>
+        <a href="index.php" class="logo">Cat House<span>.</span></a>
 
         <!-- 網頁導覽 -->
         <nav class="navbar">
@@ -120,6 +128,11 @@ if (isset($_POST["CommentTextarea"])) {
         <div class="icons">
             <!-- 查找 -->
             <label id="switch-search" class="fas fa-search"></label>
+            <!-- 商品搜索框 -->
+            <form method="GET" action="index.php" class="search" id="search">
+                <input type="text" name="search" placeholder="請輸入查找的相關商品關鍵字">
+                <button type="submit" class="fas fa-search" aria-label="search-product"></button>
+            </form>
 
             <!-- 購物清單 -->
             <label id="switch-shopping" class="fas fa-shopping-cart"></label>
@@ -294,22 +307,42 @@ if (isset($_POST["CommentTextarea"])) {
         <!-- 分頁按鈕 -->
         <div class="page-container">
             <?php
-            /* 是否有更多頁數 ( _NOW - 2 > 1 ) */
-            if ($__NOW_PAGE - 2 > 1)
-                echo ("<a href='index.php?page=1' class='more'>1...</a>");
-            for ($tempPage = $__NOW_PAGE - 2; $tempPage <= $__NOW_PAGE + 2; $tempPage++) {
-                /* 如果頁數不合法 */
-                if ($tempPage < 1 || $tempPage > $productsNeedPage)
-                    continue;
-                /* 該按鈕將被如何顯示 */
-                if ($tempPage == $__NOW_PAGE)
-                    echo ("<a class='select'>$tempPage</a>");
-                else
-                    echo ("<a href='index.php?page=$tempPage' class='no-select'>$tempPage</a>");
+            if (isset($_GET["search"])) {
+                $search = $_GET["search"];
+                /* 是否有更多頁數 ( _NOW - 2 > 1 ) */
+                if ($__NOW_PAGE - 2 > 1)
+                    echo ("<a href='index.php?page=1&search=$search' class='more'>1...</a>");
+                for ($tempPage = $__NOW_PAGE - 2; $tempPage <= $__NOW_PAGE + 2; $tempPage++) {
+                    /* 如果頁數不合法 */
+                    if ($tempPage < 1 || $tempPage > $productsNeedPage)
+                        continue;
+                    /* 該按鈕將被如何顯示 */
+                    if ($tempPage == $__NOW_PAGE)
+                        echo ("<a class='select'>$tempPage</a>");
+                    else
+                        echo ("<a href='index.php?page=$tempPage&search=$search' class='no-select'>$tempPage</a>");
+                }
+                /* 是否有更多頁數 ( _NOW + 2 < _MAX ) */
+                if ($__NOW_PAGE + 2 < $productsNeedPage)
+                    echo ("<a href='index.php?page=$productsNeedPage&search=$search' class='more'>...$productsNeedPage</a>");
+            } else {
+                /* 是否有更多頁數 ( _NOW - 2 > 1 ) */
+                if ($__NOW_PAGE - 2 > 1)
+                    echo ("<a href='index.php?page=1' class='more'>1...</a>");
+                for ($tempPage = $__NOW_PAGE - 2; $tempPage <= $__NOW_PAGE + 2; $tempPage++) {
+                    /* 如果頁數不合法 */
+                    if ($tempPage < 1 || $tempPage > $productsNeedPage)
+                        continue;
+                    /* 該按鈕將被如何顯示 */
+                    if ($tempPage == $__NOW_PAGE)
+                        echo ("<a class='select'>$tempPage</a>");
+                    else
+                        echo ("<a href='index.php?page=$tempPage' class='no-select'>$tempPage</a>");
+                }
+                /* 是否有更多頁數 ( _NOW + 2 < _MAX ) */
+                if ($__NOW_PAGE + 2 < $productsNeedPage)
+                    echo ("<a href='index.php?page=$productsNeedPage&search=' class='more'>...$productsNeedPage</a>");
             }
-            /* 是否有更多頁數 ( _NOW + 2 < _MAX ) */
-            if ($__NOW_PAGE + 2 < $productsNeedPage)
-                echo ("<a href='index.php?page=$productsNeedPage' class='more'>...$productsNeedPage</a>");
             ?>
         </div>
     </section>

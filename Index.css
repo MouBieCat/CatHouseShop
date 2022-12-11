@@ -118,6 +118,53 @@ header .icons label:hover {
     color: var(--pink);
 }
 
+/* header .icons .search */
+header .icons .search {
+    position: absolute;
+    top: 110%;
+    right: -110%;
+    background: #fff;
+    border-radius: .5rem;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+/* header .icons .search.active */
+header .icons .search.active {
+    right: 2rem;
+    transition: .4s linear;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);
+    width: 40rem;
+    height: 5rem;
+}
+
+header .icons .search input {
+    height: 100%;
+    width: 93%;
+    background: none;
+    text-transform: none;
+    font-size: 1.6rem;
+    color: black;
+    padding: 0 1.5rem;
+}
+
+header .icons .search input:focus {
+    border-color: var(--pink);
+}
+
+header .icons .search button {
+    height: 50px;
+    font-size: 2.2rem;
+    color: black;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+header .icons .search button:hover {
+    color: var(--pink);
+}
+
 /* header .icons .shopping */
 header .icons .shopping {
     position: absolute;
