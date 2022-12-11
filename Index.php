@@ -8,6 +8,7 @@ require_once("./utils/OrdersDataBaseConnect.php");
 session_start();
 
 $__NOW_PAGE = 1;
+$_SEARCH = NULL;
 
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 
@@ -55,8 +56,10 @@ if (isset($_POST["DeleteProductTextBox"])) {
 
 // 處理商品資訊資料表
 $productsConnect = new ProductsDataBaseConnect();
-if (isset($_GET["search"]))
+if (isset($_GET["search"])) {
+    $_SEARCH = $_GET["search"];
     $productsAllResult = $productsConnect->getSearchProducts($_GET["search"]); // 所有相關商品
+}
 else
     $productsAllResult = $productsConnect->getProducts(); // 所有商品
 
@@ -282,7 +285,7 @@ if (isset($_POST["CommentTextarea"])) {
                     <!-- 新增訂單 -->
                     <form method="POST" action="index.php">
                         <input type="text" style="display: none;" name="AddProductTextBox" value=<?php echo
-                    ($productRow["pID"]); ?>>
+                            ($productRow["pID"]); ?>>
                         <button type="submit" class="fas fa-shopping-cart" name="AddProductButton"
                             aria-label="add-product"> 添加至購物車</button>
                     </form>
@@ -307,42 +310,22 @@ if (isset($_POST["CommentTextarea"])) {
         <!-- 分頁按鈕 -->
         <div class="page-container">
             <?php
-            if (isset($_GET["search"])) {
-                $search = $_GET["search"];
-                /* 是否有更多頁數 ( _NOW - 2 > 1 ) */
-                if ($__NOW_PAGE - 2 > 1)
-                    echo ("<a href='index.php?page=1&search=$search' class='more'>1...</a>");
-                for ($tempPage = $__NOW_PAGE - 2; $tempPage <= $__NOW_PAGE + 2; $tempPage++) {
-                    /* 如果頁數不合法 */
-                    if ($tempPage < 1 || $tempPage > $productsNeedPage)
-                        continue;
-                    /* 該按鈕將被如何顯示 */
-                    if ($tempPage == $__NOW_PAGE)
-                        echo ("<a class='select'>$tempPage</a>");
-                    else
-                        echo ("<a href='index.php?page=$tempPage&search=$search' class='no-select'>$tempPage</a>");
-                }
-                /* 是否有更多頁數 ( _NOW + 2 < _MAX ) */
-                if ($__NOW_PAGE + 2 < $productsNeedPage)
-                    echo ("<a href='index.php?page=$productsNeedPage&search=$search' class='more'>...$productsNeedPage</a>");
-            } else {
-                /* 是否有更多頁數 ( _NOW - 2 > 1 ) */
-                if ($__NOW_PAGE - 2 > 1)
-                    echo ("<a href='index.php?page=1' class='more'>1...</a>");
-                for ($tempPage = $__NOW_PAGE - 2; $tempPage <= $__NOW_PAGE + 2; $tempPage++) {
-                    /* 如果頁數不合法 */
-                    if ($tempPage < 1 || $tempPage > $productsNeedPage)
-                        continue;
-                    /* 該按鈕將被如何顯示 */
-                    if ($tempPage == $__NOW_PAGE)
-                        echo ("<a class='select'>$tempPage</a>");
-                    else
-                        echo ("<a href='index.php?page=$tempPage' class='no-select'>$tempPage</a>");
-                }
-                /* 是否有更多頁數 ( _NOW + 2 < _MAX ) */
-                if ($__NOW_PAGE + 2 < $productsNeedPage)
-                    echo ("<a href='index.php?page=$productsNeedPage&search=' class='more'>...$productsNeedPage</a>");
+            /* 是否有更多頁數 ( _NOW - 2 > 1 ) */
+            if ($__NOW_PAGE - 2 > 1)
+                echo ("<a href='index.php?page=1&search=$_SEARCH' class='more'>1...</a>");
+            for ($tempPage = $__NOW_PAGE - 2; $tempPage <= $__NOW_PAGE + 2; $tempPage++) {
+                /* 如果頁數不合法 */
+                if ($tempPage < 1 || $tempPage > $productsNeedPage)
+                    continue;
+                /* 該按鈕將被如何顯示 */
+                if ($tempPage == $__NOW_PAGE)
+                    echo ("<a class='select'>$tempPage</a>");
+                else
+                    echo ("<a href='index.php?page=$tempPage&search=$_SEARCH' class='no-select'>$tempPage</a>");
             }
+            /* 是否有更多頁數 ( _NOW + 2 < _MAX ) */
+            if ($__NOW_PAGE + 2 < $productsNeedPage)
+                echo ("<a href='index.php?page=$productsNeedPage&search=$_SEARCH' class='more'>...$productsNeedPage</a>");
             ?>
         </div>
     </section>
