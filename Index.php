@@ -141,7 +141,7 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                 <div class="box">
                     <!-- 刪除訂單 -->
                     <form method="POST" action="index.php">
-                        <input type="text" style="display: none;" name="RemoveProductTextBox" value=<?php echo
+                        <input type="text" style="display: none;" name="RemoveProductTextBox" title="RemoveProductTextBox" value=<?php echo
                             ($productRow["pID"]); ?>>
                         <button type="submit" class="fas fa-trash" name="OrderButton"
                             aria-label="remove-order"></button>
@@ -270,7 +270,7 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
 
                     <!-- 新增訂單 -->
                     <form method="POST" action="index.php">
-                        <input type="text" style="display: none;" name="AddProductTextBox" value=<?php echo
+                        <input type="text" style="display: none;" name="AddProductTextBox" title="AddProductTextBox" value=<?php echo
                             ($productRow["pID"]); ?>>
                         <button type="submit" class="fas fa-shopping-cart" name="OrderButton" aria-label="add-order">
                             添加至購物車</button>
