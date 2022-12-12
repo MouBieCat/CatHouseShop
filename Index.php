@@ -111,10 +111,12 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
             <!-- 查找 -->
             <label id="switch-search" class="fas fa-search"></label>
             <!-- 商品搜索框 -->
-            <form method="GET" action="index.php" class="search" id="search">
-                <input type="text" name="search" placeholder="請輸入查找的相關商品關鍵字">
-                <button type="submit" class="fas fa-search" aria-label="search-product"></button>
-            </form>
+            <div class="search" id="search">
+                <form method="GET" action="index.php">
+                    <input type="text" name="search" placeholder="請輸入查找的相關商品關鍵字">
+                    <button type="submit" class="fas fa-search" aria-label="search-product"></button>
+                </form>
+            </div>
 
             <!-- 購物清單 -->
             <label id="switch-shopping" class="fas fa-shopping-cart"></label>
@@ -264,7 +266,7 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                     <!-- 新增訂單 -->
                     <form method="POST" action="index.php">
                         <input type="text" style="display: none;" name="AddProductTextBox" value=<?php echo
-                            ($productRow["pID"]); ?>>
+                    ($productRow["pID"]); ?>>
                         <button type="submit" class="fas fa-shopping-cart" name="AddProductButton"
                             aria-label="add-product"> 添加至購物車</button>
                     </form>
