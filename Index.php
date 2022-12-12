@@ -8,83 +8,67 @@ require_once("./utils/OrdersDataBaseConnect.php");
 session_start();
 
 $__NOW_PAGE = 1;
-$_SEARCH = NULL;
+$__SEARCH = NULL;
+
+$__ACCOUNT_INFO_DB = new AccountInfoDataBaseConnect();
+
+$__ORDERS_DB = new OrdersDataBaseConnect();
+$__ORDERS_RESULT = NULL;
+
+$__PRODUCTS_DB = new ProductsDataBaseConnect();
+$__PRODUCTS_MAX_PAGE = 0;
+$__PRODUCTS_ALL_RESULT = NULL;
+$__PRODUCTS_OF_PAGE_RESULT = NULL;
+
+$__COMMENTS_DB = new CommentsDataBaseConnect();
+$__COMMENTS_RAND_RESULT = NULL;
 
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 
 // 處理帳戶資訊資料表
-$accounntInfoConnect = new AccountInfoDataBaseConnect();
-// 如果有 [SESSION_USER] 狀態
 if (isset($_SESSION["SESSION_USER"])) {
-    $accounntInfoConnect->addAccountInfo($_SESSION["SESSION_USER"]);
+    $__ACCOUNT_INFO_DB->addAccountInfo($_SESSION["SESSION_USER"]);
 }
 
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 
 // 處理訂單資料表
-$ordersConnect = new OrdersDataBaseConnect();
+if (isset($_POST["AddProductTextBox"]) && isset($_SESSION["SESSION_USER"]))
+    $__ORDERS_DB->addOrder($_SESSION["SESSION_USER"], $_POST["AddProductTextBox"], 1);
+
+if (isset($_POST["DeleteProductTextBox"]) && isset($_SESSION["SESSION_USER"]))
+    $__ORDERS_DB->removeOrder($_SESSION["SESSION_USER"], $_POST["DeleteProductTextBox"]);
+
 if (isset($_SESSION["SESSION_USER"])) {
-    $ordersConnect->clearInvalidOrders($_SESSION["SESSION_USER"]);
-    $ordersResult = $ordersConnect->getOrdersByUUID($_SESSION["SESSION_USER"]);
-}
-// 是否有添加訂單請求
-if (isset($_POST["AddProductTextBox"])) {
-    // 如果還沒有登入，則跳轉到登入網頁
-    if (!isset($_SESSION["SESSION_USER"])) {
-        header("Location: login.php");
-        return;
-    }
-
-    $ordersConnect->addOrder($_SESSION["SESSION_USER"], $_POST["AddProductTextBox"], 1);
-    header("Location: index.php");
-    return;
-}
-// 是否有刪除訂單請求
-if (isset($_POST["DeleteProductTextBox"])) {
-    // 如果還沒有登入，則跳轉到登入網頁
-    if (!isset($_SESSION["SESSION_USER"])) {
-        header("Location: login.php");
-        return;
-    }
-
-    $ordersConnect->removeOrder($_SESSION["SESSION_USER"], $_POST["DeleteProductTextBox"]);
-    header("Location: index.php");
-    return;
+    $__ORDERS_DB->clearInvalidOrders($_SESSION["SESSION_USER"]);
+    $__ORDERS_RESULT = $__ORDERS_DB->getOrdersByUUID($_SESSION["SESSION_USER"]);
 }
 
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 
 // 處理商品資訊資料表
-$productsConnect = new ProductsDataBaseConnect();
 if (isset($_GET["search"]))
-    $_SEARCH = $_GET["search"];
+    $__SEARCH = $_GET["search"];
 
-$productsAllResult = $productsConnect->getProducts($_SEARCH); // 所有商品
+$__PRODUCTS_ALL_RESULT = $__PRODUCTS_DB->getProducts($__SEARCH); // 所有商品
+$__PRODUCTS_MAX_PAGE = ceil($__PRODUCTS_ALL_RESULT->num_rows / 5);
 
-// 處理商品頁數
-$productsNeedPage = ceil($productsAllResult->num_rows / 5);
-if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $productsNeedPage)
+if (isset($_GET["page"]) && $_GET["page"] > 0 && $_GET["page"] <= $__PRODUCTS_MAX_PAGE)
     $__NOW_PAGE = $_GET["page"];
 
-$productsOfPageResult = $productsConnect->getProductsOfPage($__NOW_PAGE, 5, $_SEARCH); // 該頁數所顯示的商品
+$__PRODUCTS_OF_PAGE_RESULT = $__PRODUCTS_DB->getProductsOfPage($__NOW_PAGE, 5, $__SEARCH); // 該頁數所顯示的商品
 
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 
 // 處理評論資訊資料表
-$commentsConnect = new CommentsDataBaseConnect();
-$randCommentsResult = $commentsConnect->getRnadComments(); // 隨機評論
-// 是否有發送評論狀態
-if (isset($_POST["CommentTextarea"])) {
-    // 如果還沒有登入，則跳轉到登入網頁
-    if (!isset($_SESSION["SESSION_USER"])) {
-        header("Location: login.php");
-        return;
-    }
-    $sendCommentResult = $commentsConnect->addComment($_SESSION["SESSION_USER"], 5, $_POST["CommentTextarea"]);
-    header("Location: index.php?comment=$sendCommentResult");
-    return;
+if (isset($_POST["CommentTextarea"]) && isset($_SESSION["SESSION_USER"])) {
+    $sendCommentResult = $__COMMENTS_DB->addComment($_SESSION["SESSION_USER"], 5, $_POST["CommentTextarea"]);
+    header("Location: index.php?comment=" . $sendCommentResult);
 }
 
+$__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
+
+/* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 ?>
 
 <!-- 主網頁 -->
@@ -140,8 +124,8 @@ if (isset($_POST["CommentTextarea"])) {
                 /* 判斷是否為登入狀態 */
                 if (isset($_SESSION["SESSION_USER"])) { /* [IF-HEAD] */
                     $totalMoney = 0;
-                    while ($orderRow = $ordersResult->fetch_assoc()) { /* [WHILE-HEAD] */
-                        $productResult = $productsConnect->getProduct($orderRow["oProduct"]);
+                    while ($orderRow = $__ORDERS_RESULT->fetch_assoc()) { /* [WHILE-HEAD] */
+                        $productResult = $__PRODUCTS_DB->getProduct($orderRow["oProduct"]);
                         $productRow = $productResult->fetch_assoc();
                         /* 處理所需資料 */
                         $prodictMoney = $productRow["pPrice"] * $orderRow["oCount"];
@@ -265,7 +249,7 @@ if (isset($_POST["CommentTextarea"])) {
 
         <!-- 商品內容框 -->
         <div class="box-container">
-            <?php while ($productRow = $productsOfPageResult->fetch_assoc()) { /* [WHILE-HEAD] */?>
+            <?php while ($productRow = $__PRODUCTS_OF_PAGE_RESULT->fetch_assoc()) { /* [WHILE-HEAD] */?>
             <!-- 商品資訊 -->
             <div class="box">
                 <!-- 是否為限定商品 -->
@@ -280,7 +264,7 @@ if (isset($_POST["CommentTextarea"])) {
                     <!-- 新增訂單 -->
                     <form method="POST" action="index.php">
                         <input type="text" style="display: none;" name="AddProductTextBox" value=<?php echo
-                    ($productRow["pID"]); ?>>
+                            ($productRow["pID"]); ?>>
                         <button type="submit" class="fas fa-shopping-cart" name="AddProductButton"
                             aria-label="add-product"> 添加至購物車</button>
                     </form>
@@ -307,20 +291,20 @@ if (isset($_POST["CommentTextarea"])) {
             <?php
             /* 是否有更多頁數 ( _NOW - 2 > 1 ) */
             if ($__NOW_PAGE - 2 > 1)
-                echo ("<a href='index.php?page=1&search=$_SEARCH' class='more'>1...</a>");
+                echo ("<a href='index.php?page=1&search=$__SEARCH' class='more'>1...</a>");
             for ($tempPage = $__NOW_PAGE - 2; $tempPage <= $__NOW_PAGE + 2; $tempPage++) {
                 /* 如果頁數不合法 */
-                if ($tempPage < 1 || $tempPage > $productsNeedPage)
+                if ($tempPage < 1 || $tempPage > $__PRODUCTS_MAX_PAGE)
                     continue;
                 /* 該按鈕將被如何顯示 */
                 if ($tempPage == $__NOW_PAGE)
                     echo ("<a class='select'>$tempPage</a>");
                 else
-                    echo ("<a href='index.php?page=$tempPage&search=$_SEARCH' class='no-select'>$tempPage</a>");
+                    echo ("<a href='index.php?page=$tempPage&search=$__SEARCH' class='no-select'>$tempPage</a>");
             }
             /* 是否有更多頁數 ( _NOW + 2 < _MAX ) */
-            if ($__NOW_PAGE + 2 < $productsNeedPage)
-                echo ("<a href='index.php?page=$productsNeedPage&search=$_SEARCH' class='more'>...$productsNeedPage</a>");
+            if ($__NOW_PAGE + 2 < $__PRODUCTS_MAX_PAGE)
+                echo ("<a href='index.php?page=$__PRODUCTS_MAX_PAGE&search=$__SEARCH' class='more'>...$__PRODUCTS_MAX_PAGE</a>");
             ?>
         </div>
     </section>
@@ -333,8 +317,8 @@ if (isset($_POST["CommentTextarea"])) {
         <!-- 評論內容框 -->
         <div class="box-container">
             <?php
-            while ($randCommentRow = $randCommentsResult->fetch_assoc()) {
-                $commentAccountInfoResult = $accounntInfoConnect->getAccountInfo($randCommentRow["cUUID"]);
+            while ($randCommentRow = $__COMMENTS_RAND_RESULT->fetch_assoc()) {
+                $commentAccountInfoResult = $__ACCOUNT_INFO_DB->getAccountInfo($randCommentRow["cUUID"]);
                 $commentAccountInfoRow = $commentAccountInfoResult->fetch_assoc(); /* [WHILE-HEAD] */?>
             <!-- 帳戶評論 -->
             <div class="box">
