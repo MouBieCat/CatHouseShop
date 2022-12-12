@@ -33,11 +33,18 @@ if (isset($_SESSION["SESSION_USER"])) {
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 
 // 處理訂單資料表
-if (isset($_POST["AddProductTextBox"]) && isset($_SESSION["SESSION_USER"]))
-    $__ORDERS_DB->addOrder($_SESSION["SESSION_USER"], $_POST["AddProductTextBox"], 1);
+if (isset($_POST["OrderButton"])) {
+    if (!isset($_SESSION["SESSION_USER"])) {
+        header("Location: login.php");
+        return;
+    }
 
-if (isset($_POST["DeleteProductTextBox"]) && isset($_SESSION["SESSION_USER"]))
-    $__ORDERS_DB->removeOrder($_SESSION["SESSION_USER"], $_POST["DeleteProductTextBox"]);
+    if (isset($_POST["AddProductTextBox"]))
+        $__ORDERS_DB->addOrder($_SESSION["SESSION_USER"], $_POST["AddProductTextBox"], 1);
+
+    if (isset($_POST["RemoveProductTextBox"]))
+        $__ORDERS_DB->removeOrder($_SESSION["SESSION_USER"], $_POST["RemoveProductTextBox"]);
+}
 
 if (isset($_SESSION["SESSION_USER"])) {
     $__ORDERS_DB->clearInvalidOrders($_SESSION["SESSION_USER"]);
@@ -123,24 +130,21 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
             <!-- 購買清單資訊卡 -->
             <div class="shopping" id="shopping">
                 <?php
-                /* 判斷是否為登入狀態 */
-                if (isset($_SESSION["SESSION_USER"])) { /* [IF-HEAD] */
-                    $totalMoney = 0;
-                    while ($orderRow = $__ORDERS_RESULT->fetch_assoc()) { /* [WHILE-HEAD] */
-                        $productResult = $__PRODUCTS_DB->getProduct($orderRow["oProduct"]);
-                        $productRow = $productResult->fetch_assoc();
-                        /* 處理所需資料 */
-                        $prodictMoney = $productRow["pPrice"] * $orderRow["oCount"];
-                        $totalMoney += $prodictMoney;
+                $totalMoney = 0;
+                if ($__ORDERS_RESULT !== NULL) {
+                    while ($orderRow = $__ORDERS_RESULT->fetch_assoc()) {
+                        $productRow = $__PRODUCTS_DB->getProduct($orderRow["oProduct"])->fetch_assoc();
+                        $productTotalMoney = $productRow["pPrice"] * $orderRow["oCount"];
+                        $totalMoney += $productTotalMoney;
                 ?>
                 <!-- 購買項目 -->
                 <div class="box">
                     <!-- 刪除訂單 -->
                     <form method="POST" action="index.php">
-                        <input type="text" style="display: none;" name="DeleteProductTextBox" value=<?php echo
+                        <input type="text" style="display: none;" name="RemoveProductTextBox" value=<?php echo
                             ($productRow["pID"]); ?>>
-                        <button type="submit" class="fas fa-trash" name="DeleteProductButton"
-                            aria-label="delete-product"></button>
+                        <button type="submit" class="fas fa-trash" name="OrderButton"
+                            aria-label="remove-order"></button>
                     </form>
 
                     <!-- 商品圖片來源 -->
@@ -153,7 +157,7 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                         <!-- 價格 * 數量 = 小計 -->
                         <span class="price-count">
                             小計：$
-                            <?php echo ($prodictMoney); ?> -
+                            <?php echo ($productTotalMoney); ?> -
                             數量：
                             <?php echo ($orderRow["oCount"]); ?>
                         </span>
@@ -164,13 +168,14 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                         </span>
                     </div>
                 </div>
-                <?php } /* [IF-END] */?>
+                <?php } /* [WHILE-END] */
+                } /* [IF-END] */?>
+
                 <!-- 結帳及總金額 -->
                 <p>合計：$
                     <?php echo ($totalMoney); ?>
                 </p>
                 <a href="#">前往結帳</a>
-                <?php } /* [IF-END] */?>
             </div>
 
             <!-- 使用者 -->
@@ -266,9 +271,9 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                     <!-- 新增訂單 -->
                     <form method="POST" action="index.php">
                         <input type="text" style="display: none;" name="AddProductTextBox" value=<?php echo
-                    ($productRow["pID"]); ?>>
-                        <button type="submit" class="fas fa-shopping-cart" name="AddProductButton"
-                            aria-label="add-product"> 添加至購物車</button>
+                            ($productRow["pID"]); ?>>
+                        <button type="submit" class="fas fa-shopping-cart" name="OrderButton" aria-label="add-order">
+                            添加至購物車</button>
                     </form>
                 </div>
                 <!-- 商品資訊 -->
