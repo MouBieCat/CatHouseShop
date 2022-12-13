@@ -1,9 +1,9 @@
 <?php
 /* PHP 代碼塊 */
 require_once("./utils/AccountInfoDataBaseConnect.php");
+require_once("./utils/OrdersDataBaseConnect.php");
 require_once("./utils/ProductsDataBaseConnect.php");
 require_once("./utils/CommentsDataBaseConnect.php");
-require_once("./utils/OrdersDataBaseConnect.php");
 
 session_start();
 
@@ -28,6 +28,20 @@ $__COMMENTS_RAND_RESULT = NULL;
 // 處理帳戶資訊資料表
 if (isset($_SESSION["SESSION_USER"])) {
     $__ACCOUNT_INFO_DB->addAccountInfo($_SESSION["SESSION_USER"]);
+
+    /* 是否有修改帳戶資訊 */
+    if (isset($_POST["ChangeAccountInfoButton"])) {
+        // $__ACCOUNT_INFO_DB->updateAccountInfo($_SESSION["SESSION_USER"], $_POST["AccountInfoNameTextBox"], $_POST["AccountInfoEmailTextBox"], $_POST["AccountInfoPhoneTextBox"], $_POST["AccountInfoAddressTextBox"]);
+        header("Location: index.php");
+        return;
+    }
+
+    /* 是否有登入請求 */
+    if (isset($_POST["LoginOutButton"])) {
+        session_destroy();
+        header("Location: index.php");
+        return;
+    }
 }
 
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
@@ -113,7 +127,7 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
             <a href="#comments">評論</a>
         </nav>
 
-        <!-- 個人資訊 -->
+        <!-- 資訊表 -->
         <div class="icons">
             <!-- 查找 -->
             <label id="switch-search" class="fas fa-search"></label>
@@ -141,8 +155,8 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                 <div class="box">
                     <!-- 刪除訂單 -->
                     <form method="POST" action="index.php">
-                        <input type="text" style="display: none;" name="RemoveProductTextBox" title="RemoveProductTextBox" value=<?php echo
-                            ($productRow["pID"]); ?>>
+                        <input type="text" style="display: none;" name="RemoveProductTextBox"
+                            title="RemoveProductTextBox" value=<?php echo ($productRow["pID"]); ?>>
                         <button type="submit" class="fas fa-trash" name="OrderButton"
                             aria-label="remove-order"></button>
                     </form>
@@ -180,6 +194,25 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
 
             <!-- 使用者 -->
             <label id="switch-user" class="fas fa-user"></label>
+            <!-- 使用者資訊 -->
+            <div class="user" id="user">
+                <?php
+                if (isset($_SESSION["SESSION_USER"])) {
+                ?>
+                <p>使用者資訊</p>
+                <!-- 變更使用者資訊 -->
+                <form method="POST" action="index.php">
+                    <input type="submit" name="ChangeAccountInfoButton" value="修改資訊">
+                </form>
+
+                <p>其他操作</p>
+                <!-- 登出 -->
+                <form method="POST" action="index.php">
+                    <input type="submit" name="LoginOutButton" value="登出">
+                </form>
+                <?php } else
+                    echo ("<h3>請先進行<a href='login.php'>登入</a><h3>"); ?>
+            </div>
         </div>
     </header>
 
@@ -270,8 +303,8 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
 
                     <!-- 新增訂單 -->
                     <form method="POST" action="index.php">
-                        <input type="text" style="display: none;" name="AddProductTextBox" title="AddProductTextBox" value=<?php echo
-                            ($productRow["pID"]); ?>>
+                        <input type="text" style="display: none;" name="AddProductTextBox" title="AddProductTextBox"
+                            value=<?php echo ($productRow["pID"]); ?>>
                         <button type="submit" class="fas fa-shopping-cart" name="OrderButton" aria-label="add-order">
                             添加至購物車</button>
                     </form>
