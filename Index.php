@@ -52,6 +52,16 @@ if (isset($_SESSION["SESSION_USER"])) {
     if (isset($_POST["ChangeAccountInfoEmailTextBox"]))
         $__ACCOUNT_INFO_DB->setAccountInfoEmail($_SESSION["SESSION_USER"], $_POST["ChangeAccountInfoEmailTextBox"]);
 
+    if (isset($_FILES["ChangeAccountInfoImageTextBox"])) {
+        // 判斷是否為圖檔 
+        if ($_FILES['ChangeAccountInfoImageTextBox']['type'] == 'image/png' || $_FILES['ChangeAccountInfoImageTextBox']['type'] == 'image/jpeg') {
+            $movFilePathName = "./accounts/" . $_SESSION["SESSION_USER"];
+            //移動暫存到實體路徑
+            if ($_FILES['ChangeAccountInfoImageTextBox']['type'] == "image/png" && move_uploaded_file($_FILES['ChangeAccountInfoImageTextBox']['tmp_name'], $movFilePathName))
+                $__ACCOUNT_INFO_DB->setAccountInfoImage($_SESSION["SESSION_USER"], $movFilePathName);
+        }
+    }
+
     /* 是否有登入請求 */
     if (isset($_POST["LoginOutButton"])) {
         session_destroy();
@@ -245,7 +255,7 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
 
                 <p>帳戶基礎配置</p>
                 <!-- 變更使用者資訊 -->
-                <form method="POST" action="index.php">
+                <form method="POST" action="index.php" enctype="multipart/form-data">
                     <input type="text" name="ChangeAccountInfoAliasTextBox" title="ChangeAccountInfoTextBox"
                         placeholder="請輸入新的暱稱" value=<?php echo ($accountInfoRow["iAlias"]); ?>>
 
@@ -254,6 +264,8 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
 
                     <input type="email" name="ChangeAccountInfoEmailTextBox" title="ChangeAccountInfoTextBox"
                         placeholder="請輸入新的信箱" value=<?php echo ($accountInfoRow["iEmail"]); ?>>
+
+                    <input type="file" name="ChangeAccountInfoImageTextBox" title="ChangeAccountInfoImageTextBox">
 
                     <button type="submit" name="ChangeAccountInfoButton" aria-label="ChangeAccountInfoButton">
                         修改資訊</button>

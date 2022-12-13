@@ -91,6 +91,7 @@ final class AccountInfoDataBaseConnect extends DataBaseConnect
             return "電話號碼長度不符合規定。";
         $updateAccountInfoCommand = "UPDATE AccountInfo SET " . __ACCOUNTINFO_PHONE__ . "='$_Phone' WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($updateAccountInfoCommand);
+        return "";
     }
 
     public function setAccountInfoEmail(string $_UUID, string $_Email): string
@@ -101,6 +102,7 @@ final class AccountInfoDataBaseConnect extends DataBaseConnect
         $emailLower = strtolower($_Email);
         $updateAccountInfoCommand = "UPDATE AccountInfo SET " . __ACCOUNTINFO_EMAIL__ . "='$emailLower' WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($updateAccountInfoCommand);
+        return "";
     }
 
     public function setAccountInfoAlias(string $_UUID, string $_Alias): string
@@ -110,6 +112,7 @@ final class AccountInfoDataBaseConnect extends DataBaseConnect
             return "暱稱長度不符合規定。";
         $updateAccountInfoCommand = "UPDATE AccountInfo SET " . __ACCOUNTINFO_ALIAS__ . "='$_Alias' WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($updateAccountInfoCommand);
+        return "";
     }
 
     public function setAccountInfoImage(string $_UUID, string $_ImageSrc): string
@@ -119,6 +122,7 @@ final class AccountInfoDataBaseConnect extends DataBaseConnect
             return "圖片路徑長度不符合規定。";
         $updateAccountInfoCommand = "UPDATE AccountInfo SET " . __ACCOUNTINFO_IMAGE__ . "='$_ImageSrc' WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($updateAccountInfoCommand);
+        return "";
     }
 }
 ?>
