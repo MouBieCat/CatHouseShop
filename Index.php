@@ -32,14 +32,25 @@ $__COMMENTS_RAND_RESULT = NULL;
 // 處理帳戶資訊資料表
 if (isset($_SESSION["SESSION_USER"])) {
     $__ACCOUNT_INFO_DB->addAccountInfo($_SESSION["SESSION_USER"]);
-    $__ACCOUNT_INFO_RESULT = $__ACCOUNT_INFO_DB->getAccountInfo($_SESSION["SESSION_USER"]);
+
+    /* 是否有變更密碼請求 */
+    if (isset($_POST["ChangeNewPasswordTextBox"]) && isset($_POST["ChangeOldPasswordTextBox"])) {
+        if ($__ACCOUNT_DB->setNewPassword($_SESSION["SESSION_USER"], $_POST["ChangeOldPasswordTextBox"], $_POST["ChangeNewPasswordTextBox"])) {
+            session_destroy();
+            header("Location: index.php");
+            return;
+        }
+    }
 
     /* 是否有修改帳戶資訊 */
-    if (isset($_POST["ChangeAccountInfoButton"])) {
-        // $__ACCOUNT_INFO_DB->updateAccountInfo($_SESSION["SESSION_USER"], $_POST["AccountInfoNameTextBox"], $_POST["AccountInfoEmailTextBox"], $_POST["AccountInfoPhoneTextBox"], $_POST["AccountInfoAddressTextBox"]);
-        header("Location: index.php");
-        return;
-    }
+    if (isset($_POST["ChangeAccountInfoAliasTextBox"]))
+        $__ACCOUNT_INFO_DB->setAccountInfoAlias($_SESSION["SESSION_USER"], $_POST["ChangeAccountInfoAliasTextBox"]);
+
+    if (isset($_POST["ChangeAccountInfoPhoneTextBox"]))
+        $__ACCOUNT_INFO_DB->setAccountInfoPhone($_SESSION["SESSION_USER"], $_POST["ChangeAccountInfoPhoneTextBox"]);
+
+    if (isset($_POST["ChangeAccountInfoEmailTextBox"]))
+        $__ACCOUNT_INFO_DB->setAccountInfoEmail($_SESSION["SESSION_USER"], $_POST["ChangeAccountInfoEmailTextBox"]);
 
     /* 是否有登入請求 */
     if (isset($_POST["LoginOutButton"])) {
@@ -47,6 +58,8 @@ if (isset($_SESSION["SESSION_USER"])) {
         header("Location: index.php");
         return;
     }
+
+    $__ACCOUNT_INFO_RESULT = $__ACCOUNT_INFO_DB->getAccountInfo($_SESSION["SESSION_USER"]);
 }
 
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
@@ -218,18 +231,41 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                     </div>
                 </div>
 
-                <p>變更資訊</p>
+                <p>安全性配置</p>
                 <!-- 變更使用者資訊 -->
                 <form method="POST" action="index.php">
-                    <input type="submit" name="ChangeAccountInfoButton" value="修改資訊">
+                    <input type="password" name="ChangeOldPasswordTextBox" title="ChangeAccountInfoTextBox"
+                        placeholder="請輸入舊的密碼">
+                    <input type="password" name="ChangeNewPasswordTextBox" title="ChangeAccountInfoTextBox"
+                        placeholder="請輸入新的密碼">
+
+                    <button type="submit" name="ChangePasswordButton" aria-label="ChangePasswordButton">
+                        變更密碼</button>
+                </form>
+
+                <p>帳戶基礎配置</p>
+                <!-- 變更使用者資訊 -->
+                <form method="POST" action="index.php">
+                    <input type="text" name="ChangeAccountInfoAliasTextBox" title="ChangeAccountInfoTextBox"
+                        placeholder="請輸入新的暱稱" value=<?php echo ($accountInfoRow["iAlias"]); ?>>
+
+                    <input type="tel" name="ChangeAccountInfoPhoneTextBox" title="ChangeAccountInfoTextBox"
+                        placeholder="請輸入新的手機" value=<?php echo ($accountInfoRow["iPhone"]); ?>>
+
+                    <input type="email" name="ChangeAccountInfoEmailTextBox" title="ChangeAccountInfoTextBox"
+                        placeholder="請輸入新的信箱" value=<?php echo ($accountInfoRow["iEmail"]); ?>>
+
+                    <button type="submit" name="ChangeAccountInfoButton" aria-label="ChangeAccountInfoButton">
+                        修改資訊</button>
                 </form>
 
                 <p>其他操作</p>
                 <!-- 登出 -->
                 <form method="POST" action="index.php">
-                    <input type="submit" name="LoginOutButton" value="登出">
+                    <button type="submit" name="LoginOutButton" aria-label="LoginOutButton">
+                        登出</button>
                 </form>
-                <?php } /* [IF-END] */ else
+                <?php } /* [IF-END] */else
                     echo ("<h3>請先進行<a href='login.php'>登入</a><h3>"); ?>
             </div>
         </div>
@@ -427,8 +463,8 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                 <!-- 評論表單 -->
                 <form method="POST" action="index.php">
                     <!-- 內容輸入框 -->
-                    <textarea rows="10" name="CommentTextarea" maxlength="256" placeholder="請在這裡輸入您寶貴的想法！"
-                        class="field"></textarea>
+                    <textarea rows="10" name="CommentTextarea" maxlength="256" placeholder="請在這裡輸入您寶貴的想法！" class="field"
+                        required></textarea>
                     <!-- 送出 -->
                     <input type="submit" name="CommentButton" value="發表評論">
                 </form>

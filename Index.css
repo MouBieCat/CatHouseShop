@@ -298,7 +298,23 @@ header .icons .user.active form {
     margin-bottom: 5px;
 }
 
-header .icons .user.active form input[type="submit"] {
+header .icons .user.active form input {
+    text-transform: none;
+    padding: 1rem;
+    width: 100%;
+    height: 3.5rem;
+    cursor: pointer;
+    border-radius: .5rem;
+    color: #333;
+    border: .1rem solid rgba(0, 0, 0, .1);
+    margin: .7rem 0;
+}
+
+header .icons .user.active form input:hover {
+    border-color: var(--pink);
+}
+
+header .icons .user.active form button {
     width: 100%;
     height: 3.5rem;
     font-size: 1.6rem;
@@ -306,7 +322,7 @@ header .icons .user.active form input[type="submit"] {
     border-radius: .5rem;
 }
 
-header .icons .user.active form input[type="submit"]:hover {
+header .icons .user.active form button:hover {
     background: var(--pink);
     color: #fff;
 }

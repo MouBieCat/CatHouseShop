@@ -96,5 +96,18 @@ class AccountsDataBaseConnect extends DataBaseConnect
         $selectAccountCommand = "SELECT * FROM Account WHERE " . __ACCOUNT_UUID__ . "='$_UUID';";
         return $this->m_ConnectObject->query($selectAccountCommand);
     }
+
+    public function setNewPassword(string $_UUID, string $_OldPasswd, string $_NewPasswd): bool
+    {
+        $accountResult = $this->getAccountOfUUID($_UUID);
+        if ($accountResult->num_rows === 0)
+            return False;
+        $accountRow = $accountResult->fetch_assoc();
+        if ($accountRow[__ACCOUNT_PASSWD__] !== $_OldPasswd)
+            return False;
+        $updateAccountCommand = "UPDATE Account SET " . __ACCOUNT_PASSWD__ . "='$_NewPasswd' WHERE " . __ACCOUNT_UUID__ . "='$_UUID';";
+        $this->m_ConnectObject->query($updateAccountCommand);
+        return True;
+    }
 }
 ?>

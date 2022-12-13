@@ -83,5 +83,42 @@ final class AccountInfoDataBaseConnect extends DataBaseConnect
         $deleteAccountInfoCommand = "DELETE FROM AccountInfo WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($deleteAccountInfoCommand);
     }
+
+    public function setAccountInfoPhone(string $_UUID, string $_Phone): string
+    {
+        // 檢查是否符合資料庫規格
+        if (strlen($_Phone) > 15)
+            return "電話號碼長度不符合規定。";
+        $updateAccountInfoCommand = "UPDATE AccountInfo SET " . __ACCOUNTINFO_PHONE__ . "='$_Phone' WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
+        $this->m_ConnectObject->query($updateAccountInfoCommand);
+    }
+
+    public function setAccountInfoEmail(string $_UUID, string $_Email): string
+    {
+        // 檢查是否符合資料庫規格
+        if (strlen($_Email) > 64)
+            return "電子信箱長度不符合規定。";
+        $emailLower = strtolower($_Email);
+        $updateAccountInfoCommand = "UPDATE AccountInfo SET " . __ACCOUNTINFO_EMAIL__ . "='$emailLower' WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
+        $this->m_ConnectObject->query($updateAccountInfoCommand);
+    }
+
+    public function setAccountInfoAlias(string $_UUID, string $_Alias): string
+    {
+        // 檢查是否符合資料庫規格
+        if (strlen($_Alias) > 16 || strlen($_Alias) < 4)
+            return "暱稱長度不符合規定。";
+        $updateAccountInfoCommand = "UPDATE AccountInfo SET " . __ACCOUNTINFO_ALIAS__ . "='$_Alias' WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
+        $this->m_ConnectObject->query($updateAccountInfoCommand);
+    }
+
+    public function setAccountInfoImage(string $_UUID, string $_ImageSrc): string
+    {
+        // 檢查是否符合資料庫規格
+        if (strlen($_ImageSrc) > 64)
+            return "圖片路徑長度不符合規定。";
+        $updateAccountInfoCommand = "UPDATE AccountInfo SET " . __ACCOUNTINFO_IMAGE__ . "='$_ImageSrc' WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
+        $this->m_ConnectObject->query($updateAccountInfoCommand);
+    }
 }
 ?>
