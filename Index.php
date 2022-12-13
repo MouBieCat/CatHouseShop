@@ -57,7 +57,7 @@ if (isset($_SESSION["SESSION_USER"])) {
         if ($_FILES['ChangeAccountInfoImageTextBox']['type'] == 'image/png' || $_FILES['ChangeAccountInfoImageTextBox']['type'] == 'image/jpeg') {
             $movFilePathName = "./accounts/" . $_SESSION["SESSION_USER"];
             //移動暫存到實體路徑
-            if ($_FILES['ChangeAccountInfoImageTextBox']['type'] == "image/png" && move_uploaded_file($_FILES['ChangeAccountInfoImageTextBox']['tmp_name'], $movFilePathName))
+            if (move_uploaded_file($_FILES['ChangeAccountInfoImageTextBox']['tmp_name'], $movFilePathName))
                 $__ACCOUNT_INFO_DB->setAccountInfoImage($_SESSION["SESSION_USER"], $movFilePathName);
         }
     }
