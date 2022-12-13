@@ -253,6 +253,7 @@ header .icons .user {
     background: #fff;
 }
 
+/* header .box .user.active */
 header .icons .user.active {
     right: 2rem;
     transition: .4s linear;
@@ -261,6 +262,33 @@ header .icons .user.active {
     text-align: center;
 }
 
+/* header .icons .user.active .user-info */
+header .icons .user.active .user-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+header .icons .user.active .user-info img {
+    height: 6rem;
+    width: 6rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+header .icons .user.active .user-info h3 {
+    font-size: 2rem;
+    color: #333;
+}
+
+header .icons .user.active .user-info span {
+    font-size: 1.5rem;
+    color: #999;
+}
+
+/* header .box .user.active */
 header .icons .user.active p {
     border-bottom: var(--pink) solid .1rem;
     margin-bottom: 5px;
@@ -275,6 +303,7 @@ header .icons .user.active form input[type="submit"] {
     height: 3.5rem;
     font-size: 1.6rem;
     cursor: pointer;
+    border-radius: .5rem;
 }
 
 header .icons .user.active form input[type="submit"]:hover {

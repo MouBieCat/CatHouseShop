@@ -1,5 +1,6 @@
 <?php
 /* PHP 代碼塊 */
+require_once("./utils/AccountsDataBaseConnect.php");
 require_once("./utils/AccountInfoDataBaseConnect.php");
 require_once("./utils/OrdersDataBaseConnect.php");
 require_once("./utils/ProductsDataBaseConnect.php");
@@ -10,7 +11,10 @@ session_start();
 $__NOW_PAGE = 1;
 $__SEARCH = NULL;
 
+$__ACCOUNT_DB = new AccountsDataBaseConnect();
+
 $__ACCOUNT_INFO_DB = new AccountInfoDataBaseConnect();
+$__ACCOUNT_INFO_RESULT = NULL;
 
 $__ORDERS_DB = new OrdersDataBaseConnect();
 $__ORDERS_RESULT = NULL;
@@ -28,6 +32,7 @@ $__COMMENTS_RAND_RESULT = NULL;
 // 處理帳戶資訊資料表
 if (isset($_SESSION["SESSION_USER"])) {
     $__ACCOUNT_INFO_DB->addAccountInfo($_SESSION["SESSION_USER"]);
+    $__ACCOUNT_INFO_RESULT = $__ACCOUNT_INFO_DB->getAccountInfo($_SESSION["SESSION_USER"]);
 
     /* 是否有修改帳戶資訊 */
     if (isset($_POST["ChangeAccountInfoButton"])) {
@@ -196,10 +201,24 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
             <label id="switch-user" class="fas fa-user"></label>
             <!-- 使用者資訊 -->
             <div class="user" id="user">
-                <?php
-                if (isset($_SESSION["SESSION_USER"])) {
+                <?php if ($__ACCOUNT_INFO_RESULT !== NULL) { /* [IF-HEAD] */
+                    $accountRow = $__ACCOUNT_DB->getAccountOfUUID($_SESSION["SESSION_USER"])->fetch_assoc();
+                    $accountInfoRow = $__ACCOUNT_INFO_RESULT->fetch_assoc();
                 ?>
-                <p>使用者資訊</p>
+                <!-- 使用者資訊 -->
+                <div class="user-info">
+                    <img src=<?php echo ($accountInfoRow["iImageSrc"]); ?> alt="">
+                    <div>
+                        <h3>
+                            <?php echo ($accountInfoRow["iAlias"]); ?>
+                        </h3>
+                        <span>
+                            <?php echo ($accountRow["uName"]); ?>
+                        </span>
+                    </div>
+                </div>
+
+                <p>變更資訊</p>
                 <!-- 變更使用者資訊 -->
                 <form method="POST" action="index.php">
                     <input type="submit" name="ChangeAccountInfoButton" value="修改資訊">
@@ -210,7 +229,7 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                 <form method="POST" action="index.php">
                     <input type="submit" name="LoginOutButton" value="登出">
                 </form>
-                <?php } else
+                <?php } /* [IF-END] */ else
                     echo ("<h3>請先進行<a href='login.php'>登入</a><h3>"); ?>
             </div>
         </div>
