@@ -1,8 +1,6 @@
 <?php
 require_once("AccountsDataBaseConnect.php");
-
-define("__REGISTER_RESULT__", "__RESULT__");
-define("__REGISTER_CONTENT__", "__CONTENT__");
+require_once("AccountInfoDataBaseConnect.php");
 
 /**
  * 用於註冊處理的資料庫類
@@ -26,33 +24,38 @@ final class RegisterDataBaseConnect extends AccountsDataBaseConnect
     public function tryRegister(string $_Name, string $_Passwd): array
     {
         // 返回結果
-        $returnArray[__REGISTER_RESULT__] = FALSE;
-        $returnArray[__REGISTER_CONTENT__] = NULL;
+        $returnArray[__RETURN_RESULT__] = FALSE;
+        $returnArray[__RETURN_CONTENT__] = NULL;
 
         // 檢查是否為有效數據
         if (empty($_Name) || empty($_Passwd)) {
-            $returnArray[__REGISTER_CONTENT__] = "帳戶名稱或是密碼欄位不可為空。";
+            $returnArray[__RETURN_CONTENT__] = "帳戶名稱或是密碼欄位不可為空。";
             return $returnArray;
         }
 
         // 檢查是否符合資料庫規格
         if (strlen($_Name) > 16 || strlen($_Name) < 4) {
-            $returnArray[__REGISTER_CONTENT__] = "帳戶名稱長度過短或超出最大長度。";
+            $returnArray[__RETURN_CONTENT__] = "帳戶名稱長度過短或超出最大長度。";
             return $returnArray;
         }
         if (strlen($_Passwd) > 32 || strlen($_Passwd) < 6) {
-            $returnArray[__REGISTER_CONTENT__] = "密碼長度過短或超出最大長度。";
+            $returnArray[__RETURN_CONTENT__] = "密碼長度過短或超出最大長度。";
             return $returnArray;
         }
 
         // 插入數據到資料庫並判斷資料是否插入成功
         if ($this->addAccount($_Name, $_Passwd)) {
-            $returnArray[__REGISTER_RESULT__] = TRUE;
+            $accountRow = $this->getAccount($_Name)->fetch_assoc();
+
+            $accountInfoConnect = new AccountInfoDataBaseConnect();
+            $accountInfoConnect->addAccountInfo($accountRow[__ACCOUNT_UUID__]);
+
+            $returnArray[__RETURN_RESULT__] = TRUE;
             return $returnArray;
         }
 
         // 如果資料插入失敗
-        $returnArray[__REGISTER_CONTENT__] = "該帳戶名稱已經被使用。";
+        $returnArray[__RETURN_CONTENT__] = "該帳戶名稱已經被使用。";
         return $returnArray;
     }
 }

@@ -45,9 +45,9 @@ class AccountsDataBaseConnect extends DataBaseConnect
      * 添加一比帳戶
      * @param string $_Name     帳戶名稱
      * @param string $_Password 帳戶密碼
-     * @return mysqli_result|bool
+     * @return bool
      */
-    protected function addAccount(string $_Name, string $_Password)
+    protected function addAccount(string $_Name, string $_Password): bool
     {
         $insertAccountCommand = "INSERT INTO Account (" . __ACCOUNT_NAME__ . ", " . __ACCOUNT_PASSWD__ . ", " . __ACCOUNT_UUID__ . ", " . __ACCOUNT_TIME__ . ") VALUES ('$_Name', '$_Password', uuid(), now());";
         return $this->m_ConnectObject->query($insertAccountCommand);
@@ -97,17 +97,31 @@ class AccountsDataBaseConnect extends DataBaseConnect
         return $this->m_ConnectObject->query($selectAccountCommand);
     }
 
-    public function setNewPassword(string $_UUID, string $_OldPasswd, string $_NewPasswd): bool
+    public function setNewPassword(string $_UUID, string $_OldPasswd, string $_NewPasswd): array
     {
+        // 返回結果
+        $returnArray[__REGISTER_RESULT__] = FALSE;
+        $returnArray[__REGISTER_CONTENT__] = NULL;
+
+        // 檢查是否存在該帳戶
         $accountResult = $this->getAccountOfUUID($_UUID);
-        if ($accountResult->num_rows === 0)
-            return False;
+        if ($accountResult->num_rows === 0) {
+            $returnArray[__REGISTER_CONTENT__] = "該帳戶不存在";
+            return $returnArray;
+        }
+
+        // 檢查密碼是否正確
         $accountRow = $accountResult->fetch_assoc();
-        if ($accountRow[__ACCOUNT_PASSWD__] !== $_OldPasswd)
-            return False;
+        if ($accountRow[__ACCOUNT_PASSWD__] !== $_OldPasswd) {
+            $returnArray[__REGISTER_CONTENT__] = "與原密碼不符合，無法修改為新密碼。";
+            return $returnArray;
+        }
+
         $updateAccountCommand = "UPDATE Account SET " . __ACCOUNT_PASSWD__ . "='$_NewPasswd' WHERE " . __ACCOUNT_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($updateAccountCommand);
-        return True;
+
+        $returnArray[__REGISTER_RESULT__] = TRUE;
+        return $returnArray;
     }
 }
 ?>

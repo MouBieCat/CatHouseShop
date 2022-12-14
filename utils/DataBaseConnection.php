@@ -1,4 +1,8 @@
 <?php
+// Path: utils\DataBaseConnection.php
+define("__RETURN_RESULT__", "__RESULT__");
+define("__RETURN_CONTENT__", "__CONTENT__");
+
 /**
  * 表示一個連接接口類
  */
@@ -61,10 +65,10 @@ class DataBaseConnect implements IConnect
     {
         // 連接資料庫
         $this->m_ConnectObject = new mysqli(
-            $this->m_Address, // 資料庫位址
-            $this->m_UserName, // 使用者名稱
-            $this->m_UserPassword, // 使用者密碼
-            $this->m_DatabaseName // 資料庫名稱
+                $this->m_Address, // 資料庫位址
+                $this->m_UserName, // 使用者名稱
+                $this->m_UserPassword, // 使用者密碼
+                $this->m_DatabaseName // 資料庫名稱
 
         );
 

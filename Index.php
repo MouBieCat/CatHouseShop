@@ -31,29 +31,26 @@ $__COMMENTS_RAND_RESULT = NULL;
 
 // 處理帳戶資訊資料表
 if (isset($_SESSION["SESSION_USER"])) {
-    $__ACCOUNT_INFO_DB->addAccountInfo($_SESSION["SESSION_USER"]);
 
-    /* 是否有變更密碼請求 */
-    if (isset($_POST["ChangeNewPasswordTextBox"]) && isset($_POST["ChangeOldPasswordTextBox"])) {
-        if ($__ACCOUNT_DB->setNewPassword($_SESSION["SESSION_USER"], $_POST["ChangeOldPasswordTextBox"], $_POST["ChangeNewPasswordTextBox"])) {
+    // 修改密碼操作
+    if (isset($_POST["ChangePasswordButton"])) {
+        $resultArray = $__ACCOUNT_DB->setNewPassword($_SESSION["SESSION_USER"], $_POST["ChangeOldPasswordTextBox"], $_POST["ChangeNewPasswordTextBox"]);
+
+        if ($resultArray[__RETURN_RESULT__] === TRUE) {
             session_destroy();
             header("Location: index.php");
             return;
         }
     }
 
-    /* 是否有修改帳戶資訊 */
-    if (isset($_POST["ChangeAccountInfoAliasTextBox"]))
+    // 修改帳戶資訊操作
+    if (isset($_POST["ChangeAccountInfoButton"])) {
         $__ACCOUNT_INFO_DB->setAccountInfoAlias($_SESSION["SESSION_USER"], $_POST["ChangeAccountInfoAliasTextBox"]);
 
-    if (isset($_POST["ChangeAccountInfoPhoneTextBox"]))
         $__ACCOUNT_INFO_DB->setAccountInfoPhone($_SESSION["SESSION_USER"], $_POST["ChangeAccountInfoPhoneTextBox"]);
 
-    if (isset($_POST["ChangeAccountInfoEmailTextBox"]))
         $__ACCOUNT_INFO_DB->setAccountInfoEmail($_SESSION["SESSION_USER"], $_POST["ChangeAccountInfoEmailTextBox"]);
 
-    if (isset($_FILES["ChangeAccountInfoImageTextBox"])) {
-        // 判斷是否為圖檔 
         if ($_FILES['ChangeAccountInfoImageTextBox']['type'] == 'image/png' || $_FILES['ChangeAccountInfoImageTextBox']['type'] == 'image/jpeg') {
             $movFilePathName = "./accounts/" . $_SESSION["SESSION_USER"];
             //移動暫存到實體路徑
@@ -62,7 +59,7 @@ if (isset($_SESSION["SESSION_USER"])) {
         }
     }
 
-    /* 是否有登入請求 */
+    /* 是否有登出請求 */
     if (isset($_POST["LoginOutButton"])) {
         session_destroy();
         header("Location: index.php");
@@ -110,9 +107,14 @@ $__PRODUCTS_OF_PAGE_RESULT = $__PRODUCTS_DB->getProductsOfPage($__NOW_PAGE, 5, $
 /* -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/ */
 
 // 處理評論資訊資料表
-if (isset($_POST["CommentTextarea"]) && isset($_SESSION["SESSION_USER"])) {
+if (isset($_POST["CommentButton"])) {
+    if (!isset($_SESSION["SESSION_USER"])) {
+        header("Location: login.php");
+        return;
+    }
+
     $sendCommentResult = $__COMMENTS_DB->addComment($_SESSION["SESSION_USER"], 5, $_POST["CommentTextarea"]);
-    header("Location: index.php?comment=" . $sendCommentResult);
+    header("Location: index.php?comment=" . $sendCommentResult[__RETURN_CONTENT__]);
 }
 
 $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
@@ -257,13 +259,13 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                 <!-- 變更使用者資訊 -->
                 <form method="POST" action="index.php" enctype="multipart/form-data">
                     <input type="text" name="ChangeAccountInfoAliasTextBox" title="ChangeAccountInfoTextBox"
-                        placeholder="請輸入新的暱稱" value=<?php echo ($accountInfoRow["iAlias"]); ?>>
+                        placeholder="Member" value=<?php echo ($accountInfoRow["iAlias"]); ?>>
 
                     <input type="tel" name="ChangeAccountInfoPhoneTextBox" title="ChangeAccountInfoTextBox"
-                        placeholder="請輸入新的手機" value=<?php echo ($accountInfoRow["iPhone"]); ?>>
+                        placeholder="0-123-456-789" value=<?php echo ($accountInfoRow["iPhone"]); ?>>
 
                     <input type="email" name="ChangeAccountInfoEmailTextBox" title="ChangeAccountInfoTextBox"
-                        placeholder="請輸入新的信箱" value=<?php echo ($accountInfoRow["iEmail"]); ?>>
+                        placeholder="example@example.com" value=<?php echo ($accountInfoRow["iEmail"]); ?>>
 
                     <input type="file" name="ChangeAccountInfoImageTextBox" title="ChangeAccountInfoImageTextBox">
 

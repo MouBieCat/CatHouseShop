@@ -65,12 +65,12 @@ final class AccountInfoDataBaseConnect extends DataBaseConnect
     /**
      * 添加一筆帳戶資訊資料
      * @param string $_UUID 標識碼
-     * @return void
+     * @return bool
      */
-    public function addAccountInfo(string $_UUID): void
+    public function addAccountInfo(string $_UUID): bool
     {
         $insertAccountInfoCommand = "INSERT INTO AccountInfo (" . __ACCOUNTINFO_UUID__ . ") VALUES ('$_UUID');";
-        $this->m_ConnectObject->query($insertAccountInfoCommand);
+        return $this->m_ConnectObject->query($insertAccountInfoCommand);
     }
 
     /**
@@ -84,45 +84,81 @@ final class AccountInfoDataBaseConnect extends DataBaseConnect
         $this->m_ConnectObject->query($deleteAccountInfoCommand);
     }
 
-    public function setAccountInfoPhone(string $_UUID, string $_Phone): string
+    public function setAccountInfoPhone(string $_UUID, string $_Phone): array
     {
+        // 返回結果
+        $returnArray[__RETURN_RESULT__] = FALSE;
+        $returnArray[__RETURN_CONTENT__] = NULL;
+
         // 檢查是否符合資料庫規格
-        if (strlen($_Phone) > 15)
-            return "電話號碼長度不符合規定。";
+        if (strlen($_Phone) > 15) {
+            $returnArray[__RETURN_CONTENT__] = "電話號碼長度不符合規定。";
+            return $returnArray;
+        }
+
         $updateAccountInfoCommand = "UPDATE AccountInfo SET " . __ACCOUNTINFO_PHONE__ . "='$_Phone' WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($updateAccountInfoCommand);
-        return "";
+
+        $returnArray[__RETURN_RESULT__] = TRUE;
+        return $returnArray;
     }
 
-    public function setAccountInfoEmail(string $_UUID, string $_Email): string
+    public function setAccountInfoEmail(string $_UUID, string $_Email): array
     {
+        // 返回結果
+        $returnArray[__RETURN_RESULT__] = FALSE;
+        $returnArray[__RETURN_CONTENT__] = NULL;
+
         // 檢查是否符合資料庫規格
-        if (strlen($_Email) > 64)
-            return "電子信箱長度不符合規定。";
+        if (strlen($_Email) > 64) {
+            $returnArray[__RETURN_CONTENT__] = "電子信箱長度不符合規定。";
+            return $returnArray;
+        }
+
         $emailLower = strtolower($_Email);
         $updateAccountInfoCommand = "UPDATE AccountInfo SET " . __ACCOUNTINFO_EMAIL__ . "='$emailLower' WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($updateAccountInfoCommand);
-        return "";
+
+        $returnArray[__RETURN_RESULT__] = TRUE;
+        return $returnArray;
     }
 
-    public function setAccountInfoAlias(string $_UUID, string $_Alias): string
+    public function setAccountInfoAlias(string $_UUID, string $_Alias): array
     {
+        // 返回結果
+        $returnArray[__RETURN_RESULT__] = FALSE;
+        $returnArray[__RETURN_CONTENT__] = NULL;
+
         // 檢查是否符合資料庫規格
-        if (strlen($_Alias) > 16 || strlen($_Alias) < 4)
-            return "暱稱長度不符合規定。";
+        if (strlen($_Alias) > 16 || strlen($_Alias) < 4) {
+            $returnArray[__RETURN_CONTENT__] = "帳戶暱稱長度不符合規定。";
+            return $returnArray;
+        }
+
         $updateAccountInfoCommand = "UPDATE AccountInfo SET " . __ACCOUNTINFO_ALIAS__ . "='$_Alias' WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($updateAccountInfoCommand);
-        return "";
+
+        $returnArray[__RETURN_RESULT__] = TRUE;
+        return $returnArray;
     }
 
-    public function setAccountInfoImage(string $_UUID, string $_ImageSrc): string
+    public function setAccountInfoImage(string $_UUID, string $_ImageSrc): array
     {
+        // 返回結果
+        $returnArray[__RETURN_RESULT__] = FALSE;
+        $returnArray[__RETURN_CONTENT__] = NULL;
+
         // 檢查是否符合資料庫規格
-        if (strlen($_ImageSrc) > 64)
-            return "圖片路徑長度不符合規定。";
+        if (strlen($_ImageSrc) > 64) {
+            $returnArray[__RETURN_CONTENT__] = "帳戶頭貼路徑長度不符合規定。";
+            return $returnArray;
+        }
+
         $updateAccountInfoCommand = "UPDATE AccountInfo SET " . __ACCOUNTINFO_IMAGE__ . "='$_ImageSrc' WHERE " . __ACCOUNTINFO_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($updateAccountInfoCommand);
-        return "";
+
+        $returnArray[__RETURN_RESULT__] = TRUE;
+        return $returnArray;
     }
 }
 ?>

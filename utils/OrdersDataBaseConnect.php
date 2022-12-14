@@ -89,6 +89,7 @@ final class OrdersDataBaseConnect extends DataBaseConnect
     {
         if ($this->updateOrder($_UUID, $_Product, $_Count))
             return;
+
         $insertOrderCommand = "INSERT INTO Orders(" . __ORDERS_UUID__ . ", " . __ORDERS_PRODUCT__ . ", " . __ORDERS_COUNT__ . ") VALUES ('$_UUID', $_Product, $_Count);";
         $this->m_ConnectObject->query($insertOrderCommand);
     }
@@ -105,6 +106,7 @@ final class OrdersDataBaseConnect extends DataBaseConnect
         $selectResult = $this->getOrder($_UUID, $_Product);
         if ($selectResult->num_rows === 0)
             return false;
+
         $selectRow = $selectResult->fetch_assoc();
         $newCount = $selectRow[__ORDERS_COUNT__] + $_Count;
         $updateCommand = "UPDATE Orders SET " . __ORDERS_COUNT__ . "=$newCount WHERE " . __ORDERS_UUID__ . "='$_UUID' AND " . __ORDERS_PRODUCT__ . "=$_Product;";
@@ -145,7 +147,9 @@ final class OrdersDataBaseConnect extends DataBaseConnect
         $selectResult = $this->getOrdersByUUID($_UUID);
         if ($selectResult === 0)
             return;
+
         $productConnect = new ProductsDataBaseConnect();
+
         while ($orderRow = $selectResult->fetch_assoc()) {
             $productResult = $productConnect->getProduct($orderRow["oProduct"]);
             if ($productResult->num_rows === 0)

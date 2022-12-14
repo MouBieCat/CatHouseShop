@@ -52,6 +52,7 @@ final class ProductsDataBaseConnect extends DataBaseConnect
             $selectProductsCommand = "SELECT * FROM Product;";
             return $this->m_ConnectObject->query($selectProductsCommand);
         }
+
         $selectSearchProductsCommand = "SELECT * FROM Product WHERE " . __PRODUCT_TITLE__ . " LIKE '%$_Search%';";
         return $this->m_ConnectObject->query($selectSearchProductsCommand);
     }

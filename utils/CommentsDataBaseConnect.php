@@ -88,19 +88,34 @@ final class CommentsDataBaseConnect extends DataBaseConnect
      * @param string $_Message 內容
      * @return string
      */
-    public function addComment(string $_UUID, int $_Stars, string $_Message): string
+    public function addComment(string $_UUID, int $_Stars, string $_Message): array
     {
+        // 返回結果
+        $returnArray[__RETURN_RESULT__] = FALSE;
+        $returnArray[__RETURN_CONTENT__] = NULL;
+
         // 檢查資料是否符合資料庫規格
-        if ($_Stars < 0 || $_Stars > 5)
-            return "評論星星數請介於一星至五星之間。";
-        if (strlen($_Message) > 256 || strlen($_Message) < 8)
-            return "評論訊息過短或過長。";
+        if ($_Stars < 0 || $_Stars > 5) {
+            $returnArray[__RETURN_CONTENT__] = "評論星星數不符合規格。";
+            return $returnArray;
+        }
+
+        if (strlen($_Message) > 256 || strlen($_Message) < 8) {
+            $returnArray[__RETURN_CONTENT__] = "評論內容不符合規格。";
+            return $returnArray;
+        }
 
         $insertCommentCommand = "INSERT INTO Comment (" . __COMMENT_UUID__ . ", " . __COMMENT_STARS__ . ", " . __COMMENT_MESSAGE__ . ", " . __COMMENT_TIME__ . ") VALUES ('$_UUID', $_Stars, '$_Message', now());";
         $insertCommentResult = $this->m_ConnectObject->query($insertCommentCommand);
-        if ($insertCommentResult)
-            return "完成！您的評論已經提交，感謝您寶貴的評論。";
-        return "您已經評論完成。我們將定期清理數據庫，您可以在那時重新發表對我們的看法。";
+
+        if ($insertCommentResult) {
+            $returnArray[__RETURN_RESULT__] = TRUE;
+            $returnArray[__RETURN_CONTENT__] = "您的評論提交成功，感謝來自您寶貴的評論。";
+            return $returnArray;
+        }
+
+        $returnArray[__RETURN_CONTENT__] = "您已經評論完成。我們將定期清理數據庫，您可以在那時重新發表對我們的看法。";
+        return $returnArray;
     }
 
     /**

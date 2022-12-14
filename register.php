@@ -8,13 +8,13 @@ if (isset($_POST["UserNameTextBox"]) && isset($_POST["UserPasswordTextBox"])) {
     $resultArray = $connection->tryRegister($_POST["UserNameTextBox"], $_POST["UserPasswordTextBox"]);
 
     // 判斷登入結果陣列結構
-    if ($resultArray[__REGISTER_RESULT__] === TRUE) {
+    if ($resultArray[__RETURN_RESULT__] === TRUE) {
         header("Location: login.php");
         return;
     }
 
     // 對註冊網頁顯示錯誤訊息框
-    $resultContent = $resultArray[__REGISTER_CONTENT__];
+    $resultContent = $resultArray[__RETURN_CONTENT__];
     header("Location: register.php?error=$resultContent");
 }
 ?>
