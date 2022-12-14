@@ -25,7 +25,7 @@ $connection = new LoginDataBaseConnect();
 session_start();
 
 // 判斷是否為提交資料狀態
-if (isset($_POST["UserNameTextBox"]) && isset($_POST["UserPasswordTextBox"])) {
+if (isset($_POST["LoginButton"])) {
     $resultArray = $connection->tryLogin($_POST["UserNameTextBox"], $_POST["UserPasswordTextBox"]);
 
     // 判斷登入結果陣列結構

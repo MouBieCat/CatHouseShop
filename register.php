@@ -23,7 +23,7 @@ require_once("./utils/RegisterDataBaseConnect.php");
 $connection = new RegisterDataBaseConnect();
 
 // 判斷是否為提交資料狀態
-if (isset($_POST["UserNameTextBox"]) && isset($_POST["UserPasswordTextBox"])) {
+if (isset($_POST["RegisterButton"])) {
     $resultArray = $connection->tryRegister($_POST["UserNameTextBox"], $_POST["UserPasswordTextBox"]);
 
     // 判斷登入結果陣列結構
