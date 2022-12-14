@@ -1,5 +1,24 @@
 <?php
 /**
+ * Copyright (C) 2022 MouBieCat
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+ * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+/**
  * 相關數據表結構：
  * 
  * 資料庫 Account 表資訊
@@ -100,27 +119,27 @@ class AccountsDataBaseConnect extends DataBaseConnect
     public function setNewPassword(string $_UUID, string $_OldPasswd, string $_NewPasswd): array
     {
         // 返回結果
-        $returnArray[__REGISTER_RESULT__] = FALSE;
-        $returnArray[__REGISTER_CONTENT__] = NULL;
+        $returnArray[__RETURN_RESULT__] = FALSE;
+        $returnArray[__RETURN_CONTENT__] = NULL;
 
         // 檢查是否存在該帳戶
         $accountResult = $this->getAccountOfUUID($_UUID);
         if ($accountResult->num_rows === 0) {
-            $returnArray[__REGISTER_CONTENT__] = "該帳戶不存在";
+            $returnArray[__RETURN_CONTENT__] = "該帳戶不存在";
             return $returnArray;
         }
 
         // 檢查密碼是否正確
         $accountRow = $accountResult->fetch_assoc();
         if ($accountRow[__ACCOUNT_PASSWD__] !== $_OldPasswd) {
-            $returnArray[__REGISTER_CONTENT__] = "與原密碼不符合，無法修改為新密碼。";
+            $returnArray[__RETURN_CONTENT__] = "與原密碼不符合，無法修改為新密碼。";
             return $returnArray;
         }
 
         $updateAccountCommand = "UPDATE Account SET " . __ACCOUNT_PASSWD__ . "='$_NewPasswd' WHERE " . __ACCOUNT_UUID__ . "='$_UUID';";
         $this->m_ConnectObject->query($updateAccountCommand);
 
-        $returnArray[__REGISTER_RESULT__] = TRUE;
+        $returnArray[__RETURN_RESULT__] = TRUE;
         return $returnArray;
     }
 }
