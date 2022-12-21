@@ -28,20 +28,20 @@ session_start();
 if (isset($_POST["LoginButton"])) {
     $resultArray = $connection->tryLogin($_POST["UserNameTextBox"], $_POST["UserPasswordTextBox"]);
 
-    // 判斷登入結果陣列結構
+    // 判斷登錄結果陣列結構
     if ($resultArray[__RETURN_RESULT__] === TRUE) {
         $_SESSION["SESSION_USER"] = $resultArray[__RETURN_CONTENT__];
         header("Location: index.php");
         return;
     }
 
-    // 對登入網頁顯示錯誤訊息框
+    // 對登錄網頁顯示錯誤訊息框
     $resultContent = $resultArray[__RETURN_CONTENT__];
     header("Location: login.php?error=$resultContent");
 }
 ?>
 
-<!-- 登入網頁 -->
+<!-- 登錄網頁 -->
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -50,7 +50,7 @@ if (isset($_POST["LoginButton"])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-YA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登入 - 貓之家購物網</title>
+    <title>登錄 - 貓之家購物網</title>
     <link rel="shortcut icon" href="#">
 
     <!-- 連結 -->
@@ -60,9 +60,9 @@ if (isset($_POST["LoginButton"])) {
 <body>
     <div class="container">
         <!-- 標題 -->
-        <h1>登入帳戶</h1>
+        <h1>登錄帳戶</h1>
 
-        <!-- 接收登入結果訊息 -->
+        <!-- 接收登錄結果訊息 -->
         <?php if (isset($_GET["error"])) {
             $message = $_GET["error"];
             echo ("<div class='messagebox'><h3>$message</h3></div>");
@@ -85,7 +85,7 @@ if (isset($_POST["LoginButton"])) {
             </div>
 
             <!-- 送出 -->
-            <input type="submit" name="LoginButton" value="登入">
+            <input type="submit" name="LoginButton" value="登錄">
         </form>
 
         <!-- 跳轉註冊頁面 -->

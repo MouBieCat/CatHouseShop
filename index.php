@@ -299,7 +299,7 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                         登出</button>
                 </form>
                 <?php } /* [IF-END] */else
-                    echo ("<h3>請先進行<a href='login.php'>登入</a><h3>"); ?>
+                    echo ("<h3>請先進行<a href='login.php'>登錄</a><h3>"); ?>
             </div>
         </div>
     </header>

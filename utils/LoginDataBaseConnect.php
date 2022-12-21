@@ -21,7 +21,7 @@
 require_once("AccountsDataBaseConnect.php");
 
 /**
- * 用於登入處理的資料庫類
+ * 用於登錄處理的資料庫類
  */
 final class LoginDataBaseConnect extends AccountsDataBaseConnect
 {
@@ -34,9 +34,9 @@ final class LoginDataBaseConnect extends AccountsDataBaseConnect
     }
 
     /**
-     * 嘗試登入一個帳戶
-     * @param string $_Name   登入名稱
-     * @param string $_Passwd 登入密碼
+     * 嘗試登錄一個帳戶
+     * @param string $_Name   登錄名稱
+     * @param string $_Passwd 登錄密碼
      * @return array
      */
     public function tryLogin(string $_Name, string $_Passwd): array
