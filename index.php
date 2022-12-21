@@ -265,9 +265,9 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                 <p>安全性配置</p>
                 <!-- 變更使用者資訊 -->
                 <form method="POST" action="index.php">
-                    <input type="password" name="ChangeOldPasswordTextBox" title="ChangeAccountInfoTextBox"
+                    <input type="password" name="ChangeOldPasswordTextBox" title="ChangeOldPasswordTextBox"
                         placeholder="請輸入舊的密碼">
-                    <input type="password" name="ChangeNewPasswordTextBox" title="ChangeAccountInfoTextBox"
+                    <input type="password" name="ChangeNewPasswordTextBox" title="ChangeNewPasswordTextBox"
                         placeholder="請輸入新的密碼">
 
                     <button type="submit" name="ChangePasswordButton" aria-label="ChangePasswordButton">
@@ -277,13 +277,13 @@ $__COMMENTS_RAND_RESULT = $__COMMENTS_DB->getRnadComments(); // 隨機評論
                 <p>帳戶基礎配置</p>
                 <!-- 變更使用者資訊 -->
                 <form method="POST" action="index.php" enctype="multipart/form-data">
-                    <input type="text" name="ChangeAccountInfoAliasTextBox" title="ChangeAccountInfoTextBox"
+                    <input type="text" name="ChangeAccountInfoAliasTextBox" title="ChangeAccountInfoAliasTextBox"
                         placeholder="Member" value=<?php echo ($accountInfoRow["iAlias"]); ?>>
 
-                    <input type="tel" name="ChangeAccountInfoPhoneTextBox" title="ChangeAccountInfoTextBox"
+                    <input type="tel" name="ChangeAccountInfoPhoneTextBox" title="ChangeAccountInfoPhoneTextBox"
                         placeholder="0-123-456-789" value=<?php echo ($accountInfoRow["iPhone"]); ?>>
 
-                    <input type="email" name="ChangeAccountInfoEmailTextBox" title="ChangeAccountInfoTextBox"
+                    <input type="email" name="ChangeAccountInfoEmailTextBox" title="ChangeAccountInfoEmailTextBox"
                         placeholder="example@example.com" value=<?php echo ($accountInfoRow["iEmail"]); ?>>
 
                     <input type="file" name="ChangeAccountInfoImageTextBox" title="ChangeAccountInfoImageTextBox">
